@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Las Luces de Eleonora - Aventura Gráfica de Terror</title>
+    <title>Las Luces de Eleonora - Aventura Gráfica de Terror Psicológico Victoriano</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* Base Gothic Styling */
+        /* Base Gothic Steampunk Styling */
         body {
             font-family: 'IM Fell English', serif;
             background-color: #030202;
@@ -22,33 +22,40 @@
             overflow-x: hidden;
             user-select: none;
             -webkit-user-select: none;
+            background-image: radial-gradient(circle at 50% 50%, #1c130d 0%, #050302 100%);
         }
 
         .font-cinzel { font-family: 'Cinzel', serif; }
         .font-cinzel-dec { font-family: 'Cinzel Decorative', cursive; }
         .font-typewriter { font-family: 'Special Elite', monospace; }
 
-        /* Ornate Victorian Frame */
+        /* Ornate Victorian Steampunk Frame */
         .victorian-border {
             border: 12px solid #2d201b;
-            border-image: linear-gradient(to bottom right, #5e473b, #1a120e, #3d2b23, #0f0907) 12;
-            box-shadow: inset 0 0 35px rgba(0,0,0,0.98), 0 0 25px rgba(0,0,0,0.95);
+            border-image: linear-gradient(to bottom right, #8a6843, #1a120e, #573e2d, #0f0907) 12;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.95), 0 0 35px rgba(0,0,0,0.95);
         }
 
-        /* Brass Controls */
+        /* Ambient Room Overlay Texture */
+        .ambient-vignette {
+            background: radial-gradient(circle at 50% 40%, rgba(220, 170, 90, 0.05) 0%, rgba(0, 0, 0, 0.75) 85%),
+                        linear-gradient(to bottom, transparent 70%, rgba(0,0,0,0.9) 100%);
+        }
+
+        /* Brass Controls & Buttons */
         .brass-button {
-            background: linear-gradient(135deg, #947545 0%, #4a3820 50%, #2b1f0e 100%);
-            border: 2px solid #cbb06d;
-            color: #fceecb;
+            background: linear-gradient(135deg, #a8854f 0%, #523e23 50%, #2e210f 100%);
+            border: 2px solid #d9bd77;
+            color: #fcf4db;
             text-shadow: 1px 1px 3px #000;
             box-shadow: 0 4px 10px rgba(0,0,0,0.8), inset 0 1px 2px rgba(255,255,255,0.4);
             transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .brass-button:hover:not(:disabled) {
-            background: linear-gradient(135deg, #b39058 0%, #614828 50%, #3d2c15 100%);
-            border-color: #ffe680;
-            box-shadow: 0 0 16px rgba(212, 175, 55, 0.6), inset 0 1px 2px rgba(255,255,255,0.5);
+            background: linear-gradient(135deg, #c29d61 0%, #6e4e2b 50%, #423017 100%);
+            border-color: #fff0a3;
+            box-shadow: 0 0 18px rgba(212, 175, 55, 0.75), inset 0 1px 2px rgba(255,255,255,0.6);
             transform: translateY(-2px);
         }
 
@@ -57,18 +64,18 @@
             box-shadow: inset 0 3px 6px rgba(0,0,0,0.9);
         }
 
-        /* World Modes Transitions */
+        /* World Modes Filters */
         .normal-world {
-            filter: sepia(0.4) contrast(1.15) brightness(0.85);
+            filter: sepia(0.2) contrast(1.1) brightness(0.95);
             transition: filter 0.8s ease-in-out;
         }
 
         .refracted-world {
-            filter: hue-rotate(185deg) saturate(2.2) contrast(1.35) brightness(1.05);
+            filter: hue-rotate(185deg) saturate(2.5) contrast(1.35) brightness(1.1);
             transition: filter 0.8s ease-in-out;
         }
 
-        /* Flash FX */
+        /* Prism Flash FX */
         #prism-overlay {
             pointer-events: none;
             opacity: 0;
@@ -82,45 +89,45 @@
 
         @keyframes prismFlash {
             0% { opacity: 0; background: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(0,0,0,0.9) 100%); }
-            30% { opacity: 1; background: radial-gradient(circle, rgba(0,255,200,0.9) 0%, rgba(255,0,128,0.9) 100%); mix-blend-mode: color-dodge; }
+            30% { opacity: 1; background: radial-gradient(circle, rgba(0,255,200,0.95) 0%, rgba(255,0,128,0.95) 100%); mix-blend-mode: color-dodge; }
             100% { opacity: 0; background: radial-gradient(circle, rgba(0,0,0,0) 0%, rgba(0,0,0,0.95) 100%); }
         }
 
         /* Interactive Hotspots */
         .hotspot-node {
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .hotspot-normal {
-            border: 2px dashed rgba(212, 175, 55, 0.5);
-            box-shadow: 0 0 12px rgba(0,0,0,0.85);
-            background: rgba(15, 10, 8, 0.65);
-            backdrop-filter: blur(2px);
+            border: 2px dashed rgba(212, 175, 55, 0.65);
+            box-shadow: 0 0 18px rgba(0,0,0,0.9);
+            background: rgba(18, 12, 9, 0.82);
+            backdrop-filter: blur(4px);
         }
 
         .hotspot-normal:hover {
             border-style: solid;
-            border-color: #ffd700;
-            background: rgba(212, 175, 55, 0.3);
-            transform: scale(1.04);
-            box-shadow: 0 0 18px rgba(212, 175, 55, 0.6);
+            border-color: #ffe066;
+            background: rgba(212, 175, 55, 0.45);
+            transform: scale(1.06);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.85);
         }
 
         .hotspot-refracted {
-            border: 2px solid rgba(0, 255, 200, 0.9);
-            box-shadow: 0 0 20px rgba(0, 255, 200, 0.8), inset 0 0 14px rgba(255, 0, 150, 0.6);
-            background: rgba(5, 25, 30, 0.7);
+            border: 2px solid rgba(0, 255, 220, 0.95);
+            box-shadow: 0 0 25px rgba(0, 255, 200, 0.9), inset 0 0 16px rgba(255, 0, 150, 0.75);
+            background: rgba(5, 30, 38, 0.85);
             animation: refractedPulse 1.8s infinite alternate ease-in-out;
         }
 
         .hotspot-refracted:hover {
-            transform: scale(1.06);
-            box-shadow: 0 0 30px rgba(0, 255, 220, 1), inset 0 0 20px rgba(255, 0, 180, 0.9);
+            transform: scale(1.08);
+            box-shadow: 0 0 38px rgba(0, 255, 220, 1), inset 0 0 22px rgba(255, 0, 180, 0.95);
         }
 
         @keyframes refractedPulse {
-            0% { box-shadow: 0 0 10px rgba(0, 255, 200, 0.5), inset 0 0 8px rgba(255, 0, 150, 0.4); }
-            100% { box-shadow: 0 0 25px rgba(0, 255, 200, 0.95), inset 0 0 18px rgba(255, 0, 150, 0.8); }
+            0% { box-shadow: 0 0 12px rgba(0, 255, 200, 0.5), inset 0 0 10px rgba(255, 0, 150, 0.4); }
+            100% { box-shadow: 0 0 30px rgba(0, 255, 200, 0.98), inset 0 0 22px rgba(255, 0, 150, 0.85); }
         }
 
         /* Neon & Parchment Effects */
@@ -129,27 +136,27 @@
         }
 
         .parchment-box {
-            background: linear-gradient(to bottom, #1a130e 0%, #0d0906 100%);
-            border: 2px solid #5a4233;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.9), 0 5px 15px rgba(0,0,0,0.8);
+            background: linear-gradient(to bottom, #1d1510 0%, #0f0a07 100%);
+            border: 2px solid #6b4e3d;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.95), 0 8px 20px rgba(0,0,0,0.85);
         }
 
         /* Inventory Slots */
         .inventory-slot {
-            background: radial-gradient(circle, #2d211a 0%, #120d0a 100%);
-            border: 2px solid #4a382c;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.85);
-            transition: all 0.2s ease;
+            background: radial-gradient(circle, #33251c 0%, #140e0a 100%);
+            border: 2px solid #543f31;
+            box-shadow: inset 0 0 12px rgba(0,0,0,0.9);
+            transition: all 0.25s ease;
         }
         .inventory-slot.active {
             border-color: #ffd700;
-            box-shadow: 0 0 14px rgba(212, 175, 55, 0.8), inset 0 0 8px rgba(212, 175, 55, 0.6);
+            box-shadow: 0 0 16px rgba(212, 175, 55, 0.85), inset 0 0 10px rgba(212, 175, 55, 0.7);
         }
 
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #080605; }
-        ::-webkit-scrollbar-thumb { background: #3d2b22; border-radius: 4px; border: 1px solid #6b4d3d; }
+        ::-webkit-scrollbar-thumb { background: #473227; border-radius: 4px; border: 1px solid #7a5845; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between bg-black text-amber-100/90">
@@ -158,7 +165,7 @@
     <div id="prism-overlay" class="fixed inset-0 z-50"></div>
 
     <!-- Header Navigation -->
-    <header class="w-full bg-stone-950 border-b border-stone-800 p-3 px-4 sm:px-6 flex justify-between items-center shadow-2xl z-20">
+    <header class="w-full bg-stone-950/95 border-b border-amber-900/40 p-3 px-4 sm:px-6 flex justify-between items-center shadow-2xl z-20 backdrop-blur-sm">
         <div class="flex items-center space-x-3">
             <i class="fa-solid fa-eye text-amber-500 text-xl sm:text-2xl animate-pulse"></i>
             <div>
@@ -184,10 +191,10 @@
     <main class="flex-1 max-w-6xl w-full mx-auto p-2 sm:p-4 flex flex-col justify-center gap-3">
 
         <!-- Top Control Bar & Objective Bar -->
-        <div class="flex flex-wrap justify-between items-center bg-stone-900/90 p-3 rounded-lg border border-stone-800 gap-2 shadow-xl">
+        <div class="flex flex-wrap justify-between items-center bg-stone-950/90 p-3 rounded-lg border border-amber-900/50 gap-2 shadow-xl backdrop-blur-md">
             <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
                 <div class="flex items-center gap-2">
-                    <span id="chapter-number-badge" class="font-cinzel text-xs text-amber-500 font-bold uppercase tracking-wider bg-stone-950 px-2 py-0.5 rounded border border-amber-900/60">Capítulo 1/5</span>
+                    <span id="chapter-number-badge" class="font-cinzel text-xs text-amber-400 font-bold uppercase tracking-wider bg-stone-900 px-2.5 py-1 rounded border border-amber-700/60 shadow">Capítulo 1/5</span>
                     <span class="text-stone-600">|</span>
                     <span id="chapter-title-display" class="font-cinzel font-bold text-sm text-amber-200">El Taller del Óptico</span>
                 </div>
@@ -200,59 +207,65 @@
             </div>
 
             <!-- Prism Toggle Lever -->
-            <button id="btn-toggle-prism" class="brass-button px-4 py-2 rounded-lg font-cinzel text-xs sm:text-sm font-bold flex items-center gap-2 border-2 border-amber-500">
-                <i class="fa-solid fa-gem text-cyan-400 animate-spin" style="animation-duration: 10s;"></i>
+            <button id="btn-toggle-prism" class="brass-button px-4 py-2 rounded-lg font-cinzel text-xs sm:text-sm font-bold flex items-center gap-2 border-2 border-amber-400">
+                <i class="fa-solid fa-gem text-cyan-300 animate-spin" style="animation-duration: 10s;"></i>
                 <span id="prism-btn-text">Activar Visores de Cuarzo</span>
             </button>
         </div>
 
         <!-- Objective Indicator Banner -->
-        <div id="objective-banner" class="bg-stone-950/90 border border-amber-900/60 p-2.5 px-4 rounded-md text-xs font-typewriter text-amber-300 flex items-center gap-2 shadow-inner">
+        <div id="objective-banner" class="bg-stone-950/95 border border-amber-800/60 p-2.5 px-4 rounded-md text-xs font-typewriter text-amber-300 flex items-center gap-2 shadow-inner">
             <i class="fa-solid fa-compass text-amber-500 text-sm"></i>
             <span><strong>Objetivo:</strong> <span id="objective-text">Explora el taller y busca una forma de abrir el escritorio de tu padre.</span></span>
         </div>
 
-        <!-- STAGE CANVAS VIEWPORT -->
-        <div class="relative w-full aspect-[16/9] max-h-[560px] bg-stone-950 victorian-border rounded-lg overflow-hidden shadow-2xl flex items-center justify-center">
+        <!-- STAGE CANVAS VIEWPORT WITH DYNAMIC BACKGROUND IMAGES -->
+        <div class="relative w-full aspect-[16/9] max-h-[520px] bg-stone-950 victorian-border rounded-lg overflow-hidden shadow-2xl flex items-center justify-center">
             
             <!-- Scene Container Layer -->
             <div id="scene-container" class="relative w-full h-full normal-world bg-cover bg-center transition-all duration-700">
                 
-                <!-- Procedural Canvas Environment Background -->
-                <canvas id="chapter-canvas" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+                <!-- Background Scene Image -->
+                <img id="bg-scene-image" src="" alt="Fondo de Escena" class="absolute inset-0 w-full h-full object-cover z-0" />
+                
+                <!-- Procedural Canvas Environment Background (Fallback overlay) -->
+                <canvas id="chapter-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-20"></canvas>
+                
+                <!-- Vignette and Ambient Overlay -->
+                <div class="absolute inset-0 ambient-vignette pointer-events-none z-0"></div>
 
                 <!-- Hotspots Interactive Layer -->
                 <div id="hotspots-layer" class="absolute inset-0 z-10">
                     <!-- Dynamic Hotspots Injected via JS -->
                 </div>
 
-                <!-- Dialogue Overlay Box -->
-                <div id="dialogue-box" class="absolute bottom-3 left-3 right-3 parchment-box p-3 sm:p-4 rounded-md shadow-2xl flex gap-3 sm:gap-4 items-start z-30 transition-all duration-300">
-                    <div id="avatar-container" class="w-14 h-14 sm:w-20 sm:h-20 rounded border-2 border-amber-800/80 bg-stone-950 flex-shrink-0 overflow-hidden flex items-center justify-center shadow-inner">
-                        <!-- Dynamic Character SVG Art -->
-                    </div>
+            </div>
+        </div>
 
-                    <div class="flex-1 flex flex-col justify-between">
-                        <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <span id="dialogue-speaker" class="font-cinzel font-bold text-amber-400 text-xs sm:text-sm tracking-wider">Eleonora "Nora" Vance</span>
-                                <span class="text-[10px] font-typewriter text-stone-500 hidden sm:inline">Interactúa con los elementos del entorno</span>
-                            </div>
-                            <p id="dialogue-text" class="font-typewriter text-xs sm:text-sm text-stone-200 leading-relaxed min-h-[2.6rem]">
-                                El taller está silencioso. Papá no volvió anoche. Puedo sentir las vibraciones frías de las máquinas de cuarzo...
-                            </p>
-                        </div>
+        <!-- Dialogue Box Repositioned COMPLETELY BELOW Stage Viewport -->
+        <div id="dialogue-box" class="parchment-box p-3 sm:p-4 rounded-md shadow-2xl flex gap-3 sm:gap-4 items-start border border-amber-800/60">
+            <div id="avatar-container" class="w-16 h-16 sm:w-20 sm:h-20 rounded border-2 border-amber-700/80 bg-stone-950 flex-shrink-0 overflow-hidden flex items-center justify-center shadow-inner">
+                <!-- Dynamic Character Image or SVG Art -->
+            </div>
+
+            <div class="flex-1 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <span id="dialogue-speaker" class="font-cinzel font-bold text-amber-400 text-xs sm:text-sm tracking-wider">Eleonora "Nora" Vance</span>
+                        <span class="text-[10px] font-typewriter text-stone-500 hidden sm:inline">Interactúa con los elementos del escenario superior</span>
                     </div>
+                    <p id="dialogue-text" class="font-typewriter text-xs sm:text-sm text-stone-200 leading-relaxed min-h-[2.6rem]">
+                        El taller está silencioso. Papá no volvió anoche. Puedo sentir las vibraciones frías de las máquinas de cuarzo...
+                    </p>
                 </div>
-
             </div>
         </div>
 
         <!-- Inventory Control Bar -->
-        <div class="bg-stone-950 p-3 rounded-lg border border-stone-800 shadow-xl">
+        <div class="bg-stone-950/95 p-3 rounded-lg border border-amber-900/50 shadow-xl backdrop-blur-md">
             <div class="flex justify-between items-center mb-2">
                 <span class="font-cinzel text-xs text-amber-500 tracking-widest uppercase flex items-center gap-2">
-                    <i class="fa-solid fa-suitcase"></i> Inventario de Eleonora
+                    <i class="fa-solid fa-suitcase text-amber-600"></i> Inventario de Eleonora
                 </span>
                 <span id="inventory-hint" class="text-[11px] text-stone-500 italic font-typewriter">Haz clic en un objeto para seleccionarlo</span>
             </div>
@@ -309,7 +322,7 @@
                     "Eleonora, mi pequeña... los visores nunca fueron para devolverte el pasado, sino para que aprendieras a ver la hermosa música oculta en el silencio del mundo."
                 </p>
                 <p>
-                    Eleonora caminó hacia el exterior del taller. El sol de la mañana despuntaba sobre el bosque de tejos. Ajustó perilla por última vez a sus Visores de Cuarzo: ya no los necesitaba para huir de la realidad, sino para admirar los colores eternos del mundo que la rodeaba.
+                    Eleonora caminó hacia el exterior del taller. El sol de la mañana despuntaba sobre el bosque de tejos. Ajustó la perilla por última vez a sus Visores de Cuarzo: ya no los necesitaba para huir de la realidad, sino para admirar los colores eternos del mundo que la rodeaba.
                 </p>
             </div>
 
@@ -354,113 +367,43 @@
     <!-- GAME SCRIPT LOGIC -->
     <script>
         /* ==========================================================================
-           SVG ART RESOURCE DICTIONARY (Characters, Objects, Entities)
+           ATTACHED IMAGES MAPPING & CHAPTER BACKGROUNDS
            ========================================================================== */
+        const GAME_IMAGES = {
+            eleonora: 'https://adriqc06.github.io/LasLucesdeEleonora/images/image5.jpg',
+            cadenza: 'Gemini_Generated_Image_s1kd1rs1kd1rs1kd (1).jpg',
+            tuningMan: 'Gemini_Generated_Image_s1kd1rs1kd1rs1kd (5).jpg',
+            desk: 'Gemini_Generated_Image_s1kd1rs1kd1rs1kd.jpg',
+            ghostResonance: 'Gemini_Generated_Image_s1kd1rs1kd1rs1kd (6).jpg',
+            bgChapter1: 'Gemini_Generated_Image_s1kd1rs1kd1rs1kd (7).jpg',
+            bgChapter3: 'Gemini_Generated_Image_s1kd1rs1kd1rs1kd (2).jpg',
+            bgRefracted: 'Gemini_Generated_Image_s1kd1rs1kd1rs1kd (4).jpg'
+        };
+
+        /* Background URLs mapping per chapter */
+        const CHAPTER_BACKGROUNDS = {
+            1: 'https://adriqc06.github.io/LasLucesdeEleonora/images/escena1.jpg',
+            2: 'https://adriqc06.github.io/LasLucesdeEleonora/images/escena2.jpg',
+            3: 'https://adriqc06.github.io/LasLucesdeEleonora/images/escena3.jpg',
+            4: 'https://adriqc06.github.io/LasLucesdeEleonora/images/escena4.jpg',
+            5: 'https://adriqc06.github.io/LasLucesdeEleonora/images/escena5.jpg'
+        };
+
+        /* Helper function to generate img tag with fallback */
+        function getImageTag(src, alt = '', customClass = 'w-full h-full object-cover rounded') {
+            return `<img src="${src}" alt="${alt}" class="${customClass}" onerror="this.onerror=null; this.src='https://placehold.co/300x300/120c08/ffd700?text=${encodeURIComponent(alt)}';"/>`;
+        }
+
+        /* Asset visual objects for Hotspots and Dialogue Avatars */
         const ART_ASSETS = {
-            eleonora: `
-                <svg viewBox="0 0 100 100" class="w-full h-full">
-                    <circle cx="50" cy="50" r="45" fill="#120c08" stroke="#8a6c43" stroke-width="2"/>
-                    <!-- Hair & Hood -->
-                    <path d="M 25 65 Q 20 30 50 20 Q 80 30 75 65 Q 50 85 25 65 Z" fill="#2d1b10"/>
-                    <ellipse cx="50" cy="48" rx="20" ry="24" fill="#f2d3b0"/>
-                    <!-- Goggles / Visores de Cuarzo -->
-                    <rect x="28" y="40" width="18" height="14" rx="4" fill="#3a2712" stroke="#d4af37" stroke-width="2"/>
-                    <rect x="54" y="40" width="18" height="14" rx="4" fill="#3a2712" stroke="#d4af37" stroke-width="2"/>
-                    <line x1="46" y1="47" x2="54" y2="47" stroke="#d4af37" stroke-width="3"/>
-                    <circle cx="37" cy="47" r="5" fill="#00ffe5" opacity="0.85"/>
-                    <circle cx="63" cy="47" r="5" fill="#ff00a0" opacity="0.85"/>
-                    <!-- Victorian Dress Collar -->
-                    <path d="M 32 72 Q 50 82 68 72 L 72 90 L 28 90 Z" fill="#e8ded1" stroke="#4a3525" stroke-width="1.5"/>
-                </svg>
-            `,
-            cadenza: `
-                <svg viewBox="0 0 100 100" class="w-full h-full">
-                    <!-- Owl Automaton -->
-                    <rect x="25" y="20" width="50" height="60" rx="20" fill="#4a3421" stroke="#cbb06d" stroke-width="3"/>
-                    <!-- Brass Plates -->
-                    <ellipse cx="50" cy="50" rx="18" ry="22" fill="#291c10" stroke="#8a6730" stroke-width="2"/>
-                    <circle cx="38" cy="38" r="8" fill="#15100a" stroke="#d4af37" stroke-width="2"/>
-                    <circle cx="62" cy="38" r="8" fill="#15100a" stroke="#d4af37" stroke-width="2"/>
-                    <circle cx="38" cy="38" r="3" fill="#ffcc00"/>
-                    <circle cx="62" cy="38" r="3" fill="#ffcc00"/>
-                    <!-- Beak & Gears -->
-                    <polygon points="50,44 44,52 56,52" fill="#d4af37"/>
-                    <circle cx="50" cy="62" r="7" fill="none" stroke="#d4af37" stroke-width="2" stroke-dasharray="3 2"/>
-                    <!-- Key on Top -->
-                    <path d="M 50 20 L 50 8 M 44 8 L 56 8" stroke="#d4af37" stroke-width="3"/>
-                </svg>
-            `,
-            tuningMan: `
-                <svg viewBox="0 0 100 100" class="w-full h-full">
-                    <!-- Slender Shadow Villain -->
-                    <path d="M 30 95 L 35 45 L 50 10 L 65 45 L 70 95 Z" fill="#0a080d"/>
-                    <!-- Giant Tuning Fork Face -->
-                    <path d="M 40 18 L 40 40 Q 50 48 60 40 L 60 18" fill="none" stroke="#cbb06d" stroke-width="4"/>
-                    <line x1="50" y1="45" x2="50" y2="70" stroke="#cbb06d" stroke-width="5"/>
-                    <circle cx="40" cy="16" r="3" fill="#00ffe5"/>
-                    <circle cx="60" cy="16" r="3" fill="#ff007f"/>
-                    <!-- Ethereal Glow -->
-                    <circle cx="50" cy="40" r="35" fill="none" stroke="#00ffe5" stroke-width="1" opacity="0.4" stroke-dasharray="4 4"/>
-                </svg>
-            `,
-            desk: `
-                <svg viewBox="0 0 100 100" class="w-full h-full">
-                    <rect x="10" y="35" width="80" height="45" rx="3" fill="#3b2518" stroke="#785335" stroke-width="3"/>
-                    <rect x="18" y="42" width="28" height="14" fill="#24160d" stroke="#523924" stroke-width="1.5"/>
-                    <rect x="54" y="42" width="28" height="14" fill="#24160d" stroke="#523924" stroke-width="1.5"/>
-                    <circle cx="32" cy="49" r="2" fill="#d4af37"/>
-                    <circle cx="68" cy="49" r="2" fill="#d4af37"/>
-                    <!-- Brass Lock -->
-                    <rect x="45" y="62" width="10" height="12" fill="#d4af37" rx="2"/>
-                    <circle cx="50" cy="66" r="2" fill="#120c08"/>
-                </svg>
-            `,
-            ghostResonance: `
-                <svg viewBox="0 0 100 100" class="w-full h-full">
-                    <path d="M 50 15 Q 75 30 70 65 Q 50 85 30 65 Q 25 30 50 15 Z" fill="url(#spectralGrad)" opacity="0.85"/>
-                    <defs>
-                        <linearGradient id="spectralGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#00ffe5"/>
-                            <stop offset="100%" stop-color="#ff00a0"/>
-                        </linearGradient>
-                    </defs>
-                    <ellipse cx="42" cy="40" rx="4" ry="6" fill="#051217"/>
-                    <ellipse cx="58" cy="40" rx="4" ry="6" fill="#051217"/>
-                    <circle cx="50" cy="58" r="6" fill="none" stroke="#051217" stroke-width="2"/>
-                </svg>
-            `,
-            organ: `
-                <svg viewBox="0 0 100 100" class="w-full h-full">
-                    <rect x="15" y="20" width="70" height="65" fill="#2d1d13" stroke="#8a6c43" stroke-width="3"/>
-                    <!-- Pipes -->
-                    <rect x="22" y="10" width="6" height="40" fill="#b5945b"/>
-                    <rect x="32" y="5" width="6" height="45" fill="#d4af37"/>
-                    <rect x="42" y="2" width="6" height="48" fill="#e8c878"/>
-                    <rect x="52" y="5" width="6" height="45" fill="#d4af37"/>
-                    <rect x="62" y="10" width="6" height="40" fill="#b5945b"/>
-                    <!-- Keyboard -->
-                    <rect x="20" y="60" width="60" height="15" fill="#f7f3e6" stroke="#22150c"/>
-                    <line x1="30" y1="60" x2="30" y2="75" stroke="#000"/>
-                    <line x1="40" y1="60" x2="40" y2="75" stroke="#000"/>
-                    <line x1="50" y1="60" x2="50" y2="75" stroke="#000"/>
-                    <line x1="60" y1="60" x2="60" y2="75" stroke="#000"/>
-                    <line x1="70" y1="60" x2="70" y2="75" stroke="#000"/>
-                </svg>
-            `,
-            pillar: `
-                <svg viewBox="0 0 100 100" class="w-full h-full">
-                    <rect x="35" y="30" width="30" height="58" fill="#302722" stroke="#5e493b" stroke-width="2"/>
-                    <!-- Tuning Fork Head -->
-                    <path d="M 38 30 L 38 8 Q 50 14 62 8 L 62 30" fill="none" stroke="#cbb06d" stroke-width="4"/>
-                    <circle cx="50" cy="50" r="8" fill="#120d0a" stroke="#d4af37" stroke-width="2"/>
-                </svg>
-            `,
-            vessel: `
-                <svg viewBox="0 0 100 100" class="w-full h-full">
-                    <path d="M 35 20 L 65 20 L 60 35 L 75 75 Q 75 88 50 88 Q 25 88 25 75 L 40 35 Z" fill="rgba(0, 255, 200, 0.2)" stroke="#00ffcc" stroke-width="2"/>
-                    <ellipse cx="50" cy="70" rx="18" ry="10" fill="#00ffcc" opacity="0.6"/>
-                </svg>
-            `
+            eleonora: getImageTag(GAME_IMAGES.eleonora, 'Eleonora Vance', 'w-full h-full object-cover rounded-full border-2 border-amber-500 shadow-md'),
+            cadenza: getImageTag(GAME_IMAGES.cadenza, 'Señor Cadenza'),
+            tuningMan: getImageTag(GAME_IMAGES.tuningMan, 'El Hombre del Diapasón'),
+            desk: getImageTag(GAME_IMAGES.desk, 'Escritorio'),
+            ghostResonance: getImageTag(GAME_IMAGES.ghostResonance, 'Resonancia Espectral'),
+            organ: `<div class="w-full h-full flex flex-col items-center justify-center text-amber-500 bg-stone-900/90 rounded border border-amber-700 p-1"><i class="fa-solid fa-music text-3xl"></i><span class="text-[10px] font-cinzel mt-1">Órgano</span></div>`,
+            pillar: `<div class="w-full h-full flex flex-col items-center justify-center text-cyan-400 bg-stone-900/90 rounded border border-cyan-500 p-1"><i class="fa-solid fa-monument text-3xl"></i><span class="text-[10px] font-cinzel mt-1">Pilar</span></div>`,
+            vessel: `<div class="w-full h-full flex flex-col items-center justify-center text-emerald-400 bg-stone-900/90 rounded border border-emerald-500 p-1"><i class="fa-solid fa-flask text-3xl"></i><span class="text-[10px] font-cinzel mt-1">Vasija</span></div>`
         };
 
 
@@ -527,10 +470,9 @@
 
 
         /* ==========================================================================
-           INITIALIZATION & AUDIO SYSTEM
+           INITIALIZATION & WEB AUDIO SYSTEM
            ========================================================================== */
         window.addEventListener('DOMContentLoaded', () => {
-            // UI Listeners
             document.getElementById('btn-toggle-prism').addEventListener('click', togglePrismVision);
             document.getElementById('btn-toggle-audio').addEventListener('click', toggleAudio);
             document.getElementById('btn-open-lore').addEventListener('click', openLoreModal);
@@ -648,7 +590,7 @@
 
 
         /* ==========================================================================
-           CHAPTER MANAGEMENT & RENDERING
+           SCENE BACKGROUND IMAGE & CANVAS RENDERING
            ========================================================================== */
         function loadChapter(chapterNum) {
             gameState.currentChapter = chapterNum;
@@ -677,11 +619,22 @@
         }
 
         function renderChapterScene() {
+            updateBackgroundSceneImage();
             drawChapterCanvas();
             renderHotspots();
         }
 
-        /* High-Quality Procedural Vector Background Environments */
+        function updateBackgroundSceneImage() {
+            const imgEl = document.getElementById('bg-scene-image');
+            if (!imgEl) return;
+
+            if (gameState.isRefracted) {
+                imgEl.src = GAME_IMAGES.bgRefracted;
+            } else {
+                imgEl.src = CHAPTER_BACKGROUNDS[gameState.currentChapter] || CHAPTER_BACKGROUNDS[1];
+            }
+        }
+
         function drawChapterCanvas() {
             const canvas = document.getElementById('chapter-canvas');
             if (!canvas) return;
@@ -691,92 +644,12 @@
 
             const w = canvas.width;
             const h = canvas.height;
-            const isRef = gameState.isRefracted;
-
             ctx.clearRect(0, 0, w, h);
-
-            if (gameState.currentChapter === 1) {
-                // Chapter 1: Optician Workshop
-                const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
-                bgGrad.addColorStop(0, isRef ? '#021824' : '#1a100a');
-                bgGrad.addColorStop(1, isRef ? '#120228' : '#080403');
-                ctx.fillStyle = bgGrad; ctx.fillRect(0, 0, w, h);
-
-                // Victorian Arch Windows & Glassware Shelves
-                ctx.strokeStyle = isRef ? '#00f0ffaa' : '#8a6a4388';
-                ctx.lineWidth = 3;
-                ctx.beginPath();
-                ctx.arc(w*0.5, h*0.28, 80, Math.PI, 0);
-                ctx.lineTo(w*0.5 + 80, h*0.62);
-                ctx.lineTo(w*0.5 - 80, h*0.62);
-                ctx.closePath();
-                ctx.stroke();
-
-                // Shelves
-                ctx.fillStyle = isRef ? '#0a3040' : '#2b1b13';
-                ctx.fillRect(w*0.05, h*0.25, w*0.2, 10);
-                ctx.fillRect(w*0.75, h*0.25, w*0.2, 10);
-            } 
-            else if (gameState.currentChapter === 2) {
-                // Chapter 2: Yew Forest
-                const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
-                bgGrad.addColorStop(0, isRef ? '#052e2e' : '#0c170e');
-                bgGrad.addColorStop(1, isRef ? '#200336' : '#030804');
-                ctx.fillStyle = bgGrad; ctx.fillRect(0, 0, w, h);
-
-                // Trees & Spectral Roots
-                ctx.fillStyle = isRef ? '#00ffc833' : '#172e1c55';
-                for(let i = 0; i < 6; i++) {
-                    ctx.beginPath();
-                    ctx.moveTo(i*140 + 20, h);
-                    ctx.lineTo(i*140 + 40, h*0.1);
-                    ctx.lineTo(i*140 + 70, h*0.1);
-                    ctx.lineTo(i*140 + 90, h);
-                    ctx.fill();
-                }
-            } 
-            else if (gameState.currentChapter === 3) {
-                // Chapter 3: Opera / Sanatorium
-                const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
-                bgGrad.addColorStop(0, isRef ? '#3d0042' : '#1d0c18');
-                bgGrad.addColorStop(1, isRef ? '#002b3a' : '#0a0508');
-                ctx.fillStyle = bgGrad; ctx.fillRect(0, 0, w, h);
-
-                // Stage Curtains & Balconies
-                ctx.fillStyle = isRef ? '#ff007f33' : '#4a1525aa';
-                ctx.fillRect(0, 0, w*0.18, h);
-                ctx.fillRect(w*0.82, 0, w*0.18, h);
-            } 
-            else if (gameState.currentChapter === 4) {
-                // Chapter 4: Underground Cult Laboratory
-                const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
-                bgGrad.addColorStop(0, isRef ? '#42001a' : '#1c1310');
-                bgGrad.addColorStop(1, isRef ? '#004235' : '#080605');
-                ctx.fillStyle = bgGrad; ctx.fillRect(0, 0, w, h);
-
-                // Pipes & Vats
-                ctx.strokeStyle = isRef ? '#00ffccaa' : '#5a4332aa';
-                ctx.lineWidth = 4;
-                ctx.strokeRect(w*0.2, h*0.35, w*0.6, h*0.5);
-            } 
-            else if (gameState.currentChapter === 5) {
-                // Chapter 5: Grand Crystal Realm
-                const bgGrad = ctx.createRadialGradient(w/2, h/2, 10, w/2, h/2, w*0.65);
-                bgGrad.addColorStop(0, isRef ? '#00ffe588' : '#5e432f88');
-                bgGrad.addColorStop(1, isRef ? '#1a002e' : '#050303');
-                ctx.fillStyle = bgGrad; ctx.fillRect(0, 0, w, h);
-
-                // Concentric Gears & Crystal Geometry
-                ctx.strokeStyle = isRef ? '#00ffffbb' : '#8a6c3e99';
-                ctx.lineWidth = 3;
-                ctx.beginPath(); ctx.arc(w/2, h/2, 120, 0, Math.PI*2); ctx.stroke();
-                ctx.beginPath(); ctx.arc(w/2, h/2, 70, 0, Math.PI*2); ctx.stroke();
-            }
         }
 
 
         /* ==========================================================================
-           DYNAMIC HOTSPOTS PER CHAPTER WITH CUSTOM ARTWORKS
+           DYNAMIC HOTSPOTS PER CHAPTER WITH IMAGE MINIATURES
            ========================================================================== */
         function renderHotspots() {
             const layer = document.getElementById('hotspots-layer');
@@ -785,40 +658,40 @@
             const isRef = gameState.isRefracted;
 
             if (ch === 1) {
-                createHotspot(layer, 'hs-desk', '12%', '52%', '24%', '28%', ART_ASSETS.desk, 'Escritorio de Papá', () => handleCh1Desk());
-                createHotspot(layer, 'hs-cadenza', '66%', '45%', '20%', '36%', ART_ASSETS.cadenza, gameState.ch1.cadenzaRepaired ? 'Señor Cadenza (Activo)' : 'Señor Cadenza (Averiado)', () => handleCh1Cadenza());
+                createHotspot(layer, 'hs-desk', '10%', '42%', '26%', '38%', ART_ASSETS.desk, 'Escritorio de Papá', () => handleCh1Desk());
+                createHotspot(layer, 'hs-cadenza', '66%', '32%', '24%', '45%', ART_ASSETS.cadenza, gameState.ch1.cadenzaRepaired ? 'Señor Cadenza (Activo)' : 'Señor Cadenza (Averiado)', () => handleCh1Cadenza());
                 
                 if (isRef) {
-                    createHotspot(layer, 'hs-ghost', '42%', '22%', '18%', '30%', ART_ASSETS.ghostResonance, 'Resonancia Espectral', () => handleCh1Ghost(), true);
+                    createHotspot(layer, 'hs-ghost', '40%', '16%', '20%', '35%', ART_ASSETS.ghostResonance, 'Resonancia Espectral', () => handleCh1Ghost(), true);
                 } else {
-                    createHotspot(layer, 'hs-hatch', '42%', '70%', '18%', '24%', `<i class="fa-solid fa-door-closed text-3xl text-amber-500"></i>`, 'Escotilla al Bosque', () => handleCh1Hatch());
+                    createHotspot(layer, 'hs-hatch', '42%', '68%', '18%', '26%', `<div class="bg-stone-900/90 border border-amber-600 rounded w-full h-full flex flex-col items-center justify-center"><i class="fa-solid fa-door-closed text-3xl text-amber-500"></i></div>`, 'Escotilla al Bosque', () => handleCh1Hatch());
                 }
             }
             else if (ch === 2) {
-                createHotspot(layer, 'hs-p1', '12%', '32%', '18%', '34%', ART_ASSETS.pillar, `Pilar I (${gameState.ch2.pillarsRealigned[0]?'Afinado':'Desafinado'})`, () => handleCh2Pillar(0));
-                createHotspot(layer, 'hs-p2', '41%', '28%', '18%', '34%', ART_ASSETS.pillar, `Pilar II (${gameState.ch2.pillarsRealigned[1]?'Afinado':'Desafinado'})`, () => handleCh2Pillar(1));
-                createHotspot(layer, 'hs-p3', '70%', '32%', '18%', '34%', ART_ASSETS.pillar, `Pilar III (${gameState.ch2.pillarsRealigned[2]?'Afinado':'Desafinado'})`, () => handleCh2Pillar(2));
+                createHotspot(layer, 'hs-p1', '12%', '28%', '18%', '38%', ART_ASSETS.pillar, `Pilar I (${gameState.ch2.pillarsRealigned[0]?'Afinado':'Desafinado'})`, () => handleCh2Pillar(0));
+                createHotspot(layer, 'hs-p2', '41%', '22%', '18%', '38%', ART_ASSETS.pillar, `Pilar II (${gameState.ch2.pillarsRealigned[1]?'Afinado':'Desafinado'})`, () => handleCh2Pillar(1));
+                createHotspot(layer, 'hs-p3', '70%', '28%', '18%', '38%', ART_ASSETS.pillar, `Pilar III (${gameState.ch2.pillarsRealigned[2]?'Afinado':'Desafinado'})`, () => handleCh2Pillar(2));
 
-                createHotspot(layer, 'hs-path', '38%', '68%', '24%', '24%', `<i class="fa-solid fa-tree text-3xl text-emerald-600"></i>`, gameState.ch2.pathCleared ? 'Paso al Sanatorio' : 'Espinos Murmurantes', () => handleCh2Path());
+                createHotspot(layer, 'hs-path', '38%', '68%', '24%', '24%', `<div class="bg-stone-900/90 border border-emerald-600 rounded w-full h-full flex flex-col items-center justify-center"><i class="fa-solid fa-tree text-3xl text-emerald-500"></i></div>`, gameState.ch2.pathCleared ? 'Paso al Sanatorio' : 'Espinos Murmurantes', () => handleCh2Path());
             }
             else if (ch === 3) {
-                createHotspot(layer, 'hs-organ', '32%', '22%', '36%', '40%', ART_ASSETS.organ, 'Órgano de Tonos', () => handleCh3Organ());
-                createHotspot(layer, 'hs-guard', '72%', '38%', '20%', '38%', `<i class="fa-solid fa-user-astronaut text-3xl text-amber-600"></i>`, gameState.ch3.organSolved ? 'Guardia Inerte' : 'Guardia de Cera', () => handleCh3Guard());
-                createHotspot(layer, 'hs-elevator', '8%', '42%', '20%', '38%', `<i class="fa-solid fa-dungeon text-3xl text-stone-400"></i>`, 'Ascensor Subterráneo', () => handleCh3Elevator());
+                createHotspot(layer, 'hs-organ', '32%', '20%', '36%', '45%', ART_ASSETS.organ, 'Órgano de Tonos', () => handleCh3Organ());
+                createHotspot(layer, 'hs-guard', '72%', '32%', '20%', '42%', `<div class="bg-stone-900/90 border border-amber-600 rounded w-full h-full flex flex-col items-center justify-center"><i class="fa-solid fa-user-astronaut text-3xl text-amber-600"></i></div>`, gameState.ch3.organSolved ? 'Guardia Inerte' : 'Guardia de Cera', () => handleCh3Guard());
+                createHotspot(layer, 'hs-elevator', '8%', '38%', '20%', '42%', `<div class="bg-stone-900/90 border border-stone-600 rounded w-full h-full flex flex-col items-center justify-center"><i class="fa-solid fa-dungeon text-3xl text-stone-400"></i></div>`, 'Ascensor Subterráneo', () => handleCh3Elevator());
             }
             else if (ch === 4) {
                 if (isRef) {
-                    createHotspot(layer, 'hs-soul1', '12%', '28%', '20%', '30%', ART_ASSETS.ghostResonance, 'Alma Resonante A', () => handleCh4Soul(1), true);
-                    createHotspot(layer, 'hs-soul2', '68%', '28%', '20%', '30%', ART_ASSETS.ghostResonance, 'Alma Resonante B', () => handleCh4Soul(2), true);
+                    createHotspot(layer, 'hs-soul1', '12%', '22%', '20%', '35%', ART_ASSETS.ghostResonance, 'Alma Resonante A', () => handleCh4Soul(1), true);
+                    createHotspot(layer, 'hs-soul2', '68%', '22%', '20%', '35%', ART_ASSETS.ghostResonance, 'Alma Resonante B', () => handleCh4Soul(2), true);
                 }
-                createHotspot(layer, 'hs-pump', '38%', '38%', '24%', '34%', ART_ASSETS.vessel, gameState.ch4.pumpDisabled ? 'Bomba Desactivada' : 'Bomba de Mercurio', () => handleCh4Pump());
-                createHotspot(layer, 'hs-forge', '40%', '72%', '20%', '22%', `<i class="fa-solid fa-fire-burner text-3xl text-amber-500"></i>`, 'Forja de Cristal', () => handleCh4Forge());
+                createHotspot(layer, 'hs-pump', '38%', '32%', '24%', '38%', ART_ASSETS.vessel, gameState.ch4.pumpDisabled ? 'Bomba Desactivada' : 'Bomba de Mercurio', () => handleCh4Pump());
+                createHotspot(layer, 'hs-forge', '40%', '72%', '20%', '22%', `<div class="bg-stone-900/90 border border-amber-500 rounded w-full h-full flex flex-col items-center justify-center"><i class="fa-solid fa-fire-burner text-3xl text-amber-500"></i></div>`, 'Forja de Cristal', () => handleCh4Forge());
             }
             else if (ch === 5) {
-                createHotspot(layer, 'hs-boss', '36%', '15%', '28%', '45%', ART_ASSETS.tuningMan, 'El Hombre del Diapasón', () => handleCh5Boss());
-                createHotspot(layer, 'hs-f1', '12%', '65%', '22%', '24%', `<i class="fa-solid fa-brain text-2xl text-cyan-400"></i>`, gameState.ch5.frequencies.memory ? 'Memoria (OK)' : 'Frecuencia: Memoria', () => handleCh5Voice('memory'));
-                createHotspot(layer, 'hs-f2', '39%', '65%', '22%', '24%', `<i class="fa-solid fa-heart-pulse text-2xl text-pink-500"></i>`, gameState.ch5.frequencies.emotion ? 'Emoción (OK)' : 'Frecuencia: Emoción', () => handleCh5Voice('emotion'));
-                createHotspot(layer, 'hs-f3', '66%', '65%', '22%', '24%', `<i class="fa-solid fa-feather text-2xl text-amber-300"></i>`, gameState.ch5.frequencies.acceptance ? 'Aceptación (OK)' : 'Frecuencia: Aceptación', () => handleCh5Voice('acceptance'));
+                createHotspot(layer, 'hs-boss', '36%', '8%', '28%', '52%', ART_ASSETS.tuningMan, 'El Hombre del Diapasón', () => handleCh5Boss());
+                createHotspot(layer, 'hs-f1', '12%', '65%', '22%', '24%', `<div class="bg-stone-900/90 border border-cyan-400 rounded w-full h-full flex flex-col items-center justify-center"><i class="fa-solid fa-brain text-2xl text-cyan-400"></i></div>`, gameState.ch5.frequencies.memory ? 'Memoria (OK)' : 'Frecuencia: Memoria', () => handleCh5Voice('memory'));
+                createHotspot(layer, 'hs-f2', '39%', '65%', '22%', '24%', `<div class="bg-stone-900/90 border border-pink-500 rounded w-full h-full flex flex-col items-center justify-center"><i class="fa-solid fa-heart-pulse text-2xl text-pink-500"></i></div>`, gameState.ch5.frequencies.emotion ? 'Emoción (OK)' : 'Frecuencia: Emoción', () => handleCh5Voice('emotion'));
+                createHotspot(layer, 'hs-f3', '66%', '65%', '22%', '24%', `<div class="bg-stone-900/90 border border-amber-300 rounded w-full h-full flex flex-col items-center justify-center"><i class="fa-solid fa-feather text-2xl text-amber-300"></i></div>`, gameState.ch5.frequencies.acceptance ? 'Aceptación (OK)' : 'Frecuencia: Aceptación', () => handleCh5Voice('acceptance'));
             }
         }
 
@@ -842,7 +715,7 @@
                 <div class="w-full h-full flex-1 flex items-center justify-center overflow-hidden pointer-events-none">
                     ${artContent}
                 </div>
-                <span class="text-[10px] sm:text-xs font-cinzel text-center ${labelColor} bg-stone-950/90 px-2 py-0.5 rounded border border-stone-800 mt-1">
+                <span class="text-[10px] sm:text-xs font-cinzel text-center ${labelColor} bg-stone-950/90 px-2 py-0.5 rounded border border-stone-800 mt-1 shadow-md">
                     ${label}
                 </span>
             `;
@@ -887,7 +760,6 @@
         /* ==========================================================================
            CHAPTER PUZZLE LOGIC
            ========================================================================== */
-        // Chapter 1
         function handleCh1Desk() {
             playSfx('click');
             const selected = getSelectedItem();
@@ -899,7 +771,7 @@
                 removeItemFromInventory('key_ch1');
                 addItemToInventory({ id: 'gear', name: 'Engranaje de Latón', icon: 'fa-gear', desc: 'Engranaje para la caja torácica de Cadenza.' });
                 playSfx('solve');
-                updateDialogue('Eleonora', '¡La llave encajó perfectamente! Encontré un Engranaje de Latón.', ART_ASSETS.eleonora);
+                updateDialogue('Eleonora Vance', '¡La llave encajó perfectamente! Encontré un Engranaje de Latón.', ART_ASSETS.eleonora);
                 renderHotspots();
             } else {
                 updateDialogue('Escritorio de Papá', 'Está cerrado con un cerrojo de latón. Necesitas una llave.', ART_ASSETS.desk);
@@ -912,9 +784,9 @@
                 gameState.ch1.keyFound = true;
                 addItemToInventory({ id: 'key_ch1', name: 'Llave de Bronce', icon: 'fa-key', desc: 'Llave recuperada de la refracción espectral.' });
                 playSfx('solve');
-                updateDialogue('Resonancia', 'La sombra espectral se disuelve dejando caer una Llave de Bronce.', ART_ASSETS.ghostResonance);
+                updateDialogue('Resonancia Espectral', 'La sombra espectral se disuelve dejando caer una Llave de Bronce.', ART_ASSETS.ghostResonance);
             } else {
-                updateDialogue('Resonancia', 'El eco vibracional ya entregó su objeto.', ART_ASSETS.ghostResonance);
+                updateDialogue('Resonancia Espectral', 'El eco vibracional ya entregó su objeto.', ART_ASSETS.ghostResonance);
             }
         }
 
@@ -922,15 +794,15 @@
             playSfx('click');
             const selected = getSelectedItem();
             if (gameState.ch1.cadenzaRepaired) {
-                updateDialogue('Señor Cadenza', '♪♫ (Cadenza emite un timbre alegre e indica la escotilla del suelo).', ART_ASSETS.cadenza);
+                updateDialogue('Señor Cadenza', '♪♫ (El búho autómata bate sus alas y apunta a la escotilla).', ART_ASSETS.cadenza);
             } else if (selected && selected.id === 'gear') {
                 gameState.ch1.cadenzaRepaired = true;
                 removeItemFromInventory('gear');
                 playSfx('solve');
-                updateDialogue('Señor Cadenza', '♪♫ ¡CLACK! Cadenza cobra vida y destraba la escotilla hacia el bosque.', ART_ASSETS.cadenza);
+                updateDialogue('Señor Cadenza', '♪♫ ¡CLACK! Cadenza cobra vida, gira sus ojos de lente y destraba la escotilla.', ART_ASSETS.cadenza);
                 renderHotspots();
             } else {
-                updateDialogue('Señor Cadenza', 'Le falta un engranaje clave en el pecho para funcionar.', ART_ASSETS.cadenza);
+                updateDialogue('Señor Cadenza', 'Al búho autómata le falta un engranaje clave en el pecho para funcionar.', ART_ASSETS.cadenza);
             }
         }
 
@@ -944,7 +816,6 @@
             }
         }
 
-        // Chapter 2
         function handleCh2Pillar(index) {
             playSfx('note');
             if (gameState.isRefracted) {
@@ -954,7 +825,7 @@
                 
                 if (gameState.ch2.pillarsRealigned.every(p => p === true)) {
                     gameState.ch2.pathCleared = true;
-                    updateDialogue('Bosque de Tejos', '¡Los 3 pilares están alineados! Las espinas murmurantes se abren paso.', ART_ASSETS.eleonora);
+                    updateDialogue('Eleonora Vance', '¡Los 3 pilares están alineados! Las espinas murmurantes se abren paso.', ART_ASSETS.eleonora);
                 }
                 renderHotspots();
             } else {
@@ -972,7 +843,6 @@
             }
         }
 
-        // Chapter 3
         function handleCh3Organ() {
             playSfx('note');
             const seq = gameState.ch3.sequenceInput;
@@ -1008,14 +878,13 @@
             }
         }
 
-        // Chapter 4
         function handleCh4Soul(num) {
             playSfx('click');
             gameState.ch4.soulsFreed++;
             playSfx('solve');
             updateDialogue('Alma Resonante', `Has liberado la energía del alma ${num}. Su resonancia llena el frasco de cristal.`, ART_ASSETS.ghostResonance);
             if (gameState.ch4.soulsFreed >= 2) {
-                updateDialogue('Eleonora', '¡Ambas almas han sido liberadas! Ahora puedes apagar la bomba de mercurio.', ART_ASSETS.eleonora);
+                updateDialogue('Eleonora Vance', '¡Ambas almas han sido liberadas! Ahora puedes apagar la bomba de mercurio.', ART_ASSETS.eleonora);
             }
         }
 
@@ -1044,7 +913,6 @@
             }
         }
 
-        // Chapter 5 & CONFRONTATION
         function handleCh5Voice(type) {
             playSfx('note');
             gameState.ch5.frequencies[type] = true;
@@ -1169,14 +1037,14 @@
             const container = document.getElementById('lore-content');
             if (tabKey === 'premise') {
                 container.innerHTML = `
-                    <p><strong>Premisa:</strong> Eleonora Vance, una niña de 10 años en la Inglaterra victoriana de 1892, pierde el oído tras una fiebre. Su padre óptico diseña los <em>Visores de Cuarzo</em>, que traducen las frecuencias de sonido en espectros de luz.</p>
+                    <p><strong>Premisa:</strong> Eleonora Vance, una niña en la Inglaterra victoriana de 1892, pierde el oído tras una fiebre. Su padre óptico diseña los <em>Visores de Cuarzo</em>, que traducen las frecuencias de sonido en espectros de luz.</p>
                     <p>Al accionar las palancas de los visores, la realidad se divide entre el <strong>Mundo de Cera</strong> (la opaca realidad) y el <strong>Plano Refractado</strong> (una dimensión orgánica de sombras y luz).</p>
                 `;
             } else if (tabKey === 'characters') {
                 container.innerHTML = `
                     <ul class="space-y-3 text-xs">
-                        <li><strong class="text-amber-400">Eleonora Vance:</strong> Protagonista observadora que explora los secretos entre mundos.</li>
-                        <li><strong class="text-amber-400">Señor Cadenza:</strong> Autómata guía de madera fabricado por su padre.</li>
+                        <li><strong class="text-amber-400">Eleonora Vance:</strong> Protagonista observadora con visores de cuarzo articulados.</li>
+                        <li><strong class="text-amber-400">Señor Cadenza:</strong> Búho autómata de latón y engranajes fabricado por su padre.</li>
                         <li><strong class="text-amber-400">El Hombre del Diapasón:</strong> Manifestación esquelética nacida de la negación del duelo.</li>
                     </ul>
                 `;
