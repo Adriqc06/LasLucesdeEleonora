@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Las Luces de Eleonora - Aventura Gráfica de Terror</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@400;600;800&family=IM+Fell+English:ital@0;1&family=Special+Elite&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Base Gothic Styling */
+        body {
+            font-family: 'IM Fell English', serif;
+            background-color: #030202;
+            color: #e5d5c5;
+            overflow-x: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .font-cinzel-dec { font-family: 'Cinzel Decorative', cursive; }
+        .font-typewriter { font-family: 'Special Elite', monospace; }
+
+        /* Ornate Victorian Frame */
+        .victorian-border {
+            border: 12px solid #2d201b;
+            border-image: linear-gradient(to bottom right, #5e473b, #1a120e, #3d2b23, #0f0907) 12;
+            box-shadow: inset 0 0 35px rgba(0,0,0,0.98), 0 0 25px rgba(0,0,0,0.95);
+        }
+
+        /* Brass Controls */
+        .brass-button {
+            background: linear-gradient(135deg, #947545 0%, #4a3820 50%, #2b1f0e 100%);
+            border: 2px solid #cbb06d;
+            color: #fceecb;
+            text-shadow: 1px 1px 3px #000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.8), inset 0 1px 2px rgba(255,255,255,0.4);
+            transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .brass-button:hover:not(:disabled) {
+            background: linear-gradient(135deg, #b39058 0%, #614828 50%, #3d2c15 100%);
+            border-color: #ffe680;
+            box-shadow: 0 0 16px rgba(212, 175, 55, 0.6), inset 0 1px 2px rgba(255,255,255,0.5);
+            transform: translateY(-2px);
+        }
+
+        .brass-button:active:not(:disabled) {
+            transform: translateY(1px);
+            box-shadow: inset 0 3px 6px rgba(0,0,0,0.9);
+        }
+
+        /* World Modes Transitions */
+        .normal-world {
+            filter: sepia(0.4) contrast(1.15) brightness(0.85);
+            transition: filter 0.8s ease-in-out;
+        }
+
+        .refracted-world {
+            filter: hue-rotate(185deg) saturate(2.2) contrast(1.35) brightness(1.05);
+            transition: filter 0.8s ease-in-out;
+        }
+
+        /* Flash FX */
+        #prism-overlay {
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #prism-overlay.flash {
+            opacity: 1;
+            animation: prismFlash 0.8s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+
+        @keyframes prismFlash {
+            0% { opacity: 0; background: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(0,0,0,0.9) 100%); }
+            30% { opacity: 1; background: radial-gradient(circle, rgba(0,255,200,0.9) 0%, rgba(255,0,128,0.9) 100%); mix-blend-mode: color-dodge; }
+            100% { opacity: 0; background: radial-gradient(circle, rgba(0,0,0,0) 0%, rgba(0,0,0,0.95) 100%); }
+        }
+
+        /* Interactive Hotspots */
+        .hotspot-node {
+            transition: all 0.3s ease;
+        }
+
+        .hotspot-normal {
+            border: 2px dashed rgba(212, 175, 55, 0.5);
+            box-shadow: 0 0 12px rgba(0,0,0,0.85);
+            background: rgba(15, 10, 8, 0.65);
+            backdrop-filter: blur(2px);
+        }
+
+        .hotspot-normal:hover {
+            border-style: solid;
+            border-color: #ffd700;
+            background: rgba(212, 175, 55, 0.3);
+            transform: scale(1.04);
+            box-shadow: 0 0 18px rgba(212, 175, 55, 0.6);
+        }
+
+        .hotspot-refracted {
+            border: 2px solid rgba(0, 255, 200, 0.9);
+            box-shadow: 0 0 20px rgba(0, 255, 200, 0.8), inset 0 0 14px rgba(255, 0, 150, 0.6);
+            background: rgba(5, 25, 30, 0.7);
+            animation: refractedPulse 1.8s infinite alternate ease-in-out;
+        }
+
+        .hotspot-refracted:hover {
+            transform: scale(1.06);
+            box-shadow: 0 0 30px rgba(0, 255, 220, 1), inset 0 0 20px rgba(255, 0, 180, 0.9);
+        }
+
+        @keyframes refractedPulse {
+            0% { box-shadow: 0 0 10px rgba(0, 255, 200, 0.5), inset 0 0 8px rgba(255, 0, 150, 0.4); }
+            100% { box-shadow: 0 0 25px rgba(0, 255, 200, 0.95), inset 0 0 18px rgba(255, 0, 150, 0.8); }
+        }
+
+        /* Neon & Parchment Effects */
+        .neon-text-refracted {
+            text-shadow: 0 0 6px #00ffcc, 0 0 15px #00ffcc, 0 0 25px #ff007f;
+        }
+
+        .parchment-box {
+            background: linear-gradient(to bottom, #1a130e 0%, #0d0906 100%);
+            border: 2px solid #5a4233;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.9), 0 5px 15px rgba(0,0,0,0.8);
+        }
+
+        /* Inventory Slots */
+        .inventory-slot {
+            background: radial-gradient(circle, #2d211a 0%, #120d0a 100%);
+            border: 2px solid #4a382c;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.85);
+            transition: all 0.2s ease;
+        }
+        .inventory-slot.active {
+            border-color: #ffd700;
+            box-shadow: 0 0 14px rgba(212, 175, 55, 0.8), inset 0 0 8px rgba(212, 175, 55, 0.6);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #080605; }
+        ::-webkit-scrollbar-thumb { background: #3d2b22; border-radius: 4px; border: 1px solid #6b4d3d; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between bg-black text-amber-100/90">
+
+    <!-- Prism Overlay for Flash FX -->
+    <div id="prism-overlay" class="fixed inset-0 z-50"></div>
+
+    <!-- Header Navigation -->
+    <header class="w-full bg-stone-950 border-b border-stone-800 p-3 px-4 sm:px-6 flex justify-between items-center shadow-2xl z-20">
+        <div class="flex items-center space-x-3">
+            <i class="fa-solid fa-eye text-amber-500 text-xl sm:text-2xl animate-pulse"></i>
+            <div>
+                <h1 class="font-cinzel-dec text-lg sm:text-2xl text-amber-500 tracking-wider">Las Luces de Eleonora</h1>
+                <p class="text-[10px] sm:text-xs font-typewriter text-stone-400 hidden sm:block">The Broken Prism &bull; Aventura de Terror Psicológico Victoriano</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center space-x-2 sm:space-x-4">
+            <button id="btn-open-lore" class="brass-button text-xs sm:text-sm px-3 py-1.5 rounded flex items-center gap-2">
+                <i class="fa-solid fa-journal-whills"></i>
+                <span class="hidden sm:inline">Diario de Lore</span>
+            </button>
+            
+            <button id="btn-toggle-audio" class="brass-button text-xs sm:text-sm px-3 py-1.5 rounded flex items-center gap-2">
+                <i id="audio-icon" class="fa-solid fa-volume-xmark text-stone-400"></i>
+                <span id="audio-status" class="hidden sm:inline">Audio: OFF</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Game Workspace -->
+    <main class="flex-1 max-w-6xl w-full mx-auto p-2 sm:p-4 flex flex-col justify-center gap-3">
+
+        <!-- Top Control Bar & Objective Bar -->
+        <div class="flex flex-wrap justify-between items-center bg-stone-900/90 p-3 rounded-lg border border-stone-800 gap-2 shadow-xl">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
+                <div class="flex items-center gap-2">
+                    <span id="chapter-number-badge" class="font-cinzel text-xs text-amber-500 font-bold uppercase tracking-wider bg-stone-950 px-2 py-0.5 rounded border border-amber-900/60">Capítulo 1/5</span>
+                    <span class="text-stone-600">|</span>
+                    <span id="chapter-title-display" class="font-cinzel font-bold text-sm text-amber-200">El Taller del Óptico</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="font-cinzel text-xs text-stone-400">Plano:</span>
+                    <span id="reality-indicator" class="font-cinzel font-bold text-xs sm:text-sm text-amber-400 uppercase tracking-wider">
+                        Mundo de Cera
+                    </span>
+                </div>
+            </div>
+
+            <!-- Prism Toggle Lever -->
+            <button id="btn-toggle-prism" class="brass-button px-4 py-2 rounded-lg font-cinzel text-xs sm:text-sm font-bold flex items-center gap-2 border-2 border-amber-500">
+                <i class="fa-solid fa-gem text-cyan-400 animate-spin" style="animation-duration: 10s;"></i>
+                <span id="prism-btn-text">Activar Visores de Cuarzo</span>
+            </button>
+        </div>
+
+        <!-- Objective Indicator Banner -->
+        <div id="objective-banner" class="bg-stone-950/90 border border-amber-900/60 p-2.5 px-4 rounded-md text-xs font-typewriter text-amber-300 flex items-center gap-2 shadow-inner">
+            <i class="fa-solid fa-compass text-amber-500 text-sm"></i>
+            <span><strong>Objetivo:</strong> <span id="objective-text">Explora el taller y busca una forma de abrir el escritorio de tu padre.</span></span>
+        </div>
+
+        <!-- STAGE CANVAS VIEWPORT -->
+        <div class="relative w-full aspect-[16/9] max-h-[560px] bg-stone-950 victorian-border rounded-lg overflow-hidden shadow-2xl flex items-center justify-center">
+            
+            <!-- Scene Container Layer -->
+            <div id="scene-container" class="relative w-full h-full normal-world bg-cover bg-center transition-all duration-700">
+                
+                <!-- Procedural Canvas Environment Background -->
+                <canvas id="chapter-canvas" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+
+                <!-- Hotspots Interactive Layer -->
+                <div id="hotspots-layer" class="absolute inset-0 z-10">
+                    <!-- Dynamic Hotspots Injected via JS -->
+                </div>
+
+                <!-- Dialogue Overlay Box -->
+                <div id="dialogue-box" class="absolute bottom-3 left-3 right-3 parchment-box p-3 sm:p-4 rounded-md shadow-2xl flex gap-3 sm:gap-4 items-start z-30 transition-all duration-300">
+                    <div id="avatar-container" class="w-14 h-14 sm:w-20 sm:h-20 rounded border-2 border-amber-800/80 bg-stone-950 flex-shrink-0 overflow-hidden flex items-center justify-center shadow-inner">
+                        <!-- Dynamic Character SVG Art -->
+                    </div>
+
+                    <div class="flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span id="dialogue-speaker" class="font-cinzel font-bold text-amber-400 text-xs sm:text-sm tracking-wider">Eleonora "Nora" Vance</span>
+                                <span class="text-[10px] font-typewriter text-stone-500 hidden sm:inline">Interactúa con los elementos del entorno</span>
+                            </div>
+                            <p id="dialogue-text" class="font-typewriter text-xs sm:text-sm text-stone-200 leading-relaxed min-h-[2.6rem]">
+                                El taller está silencioso. Papá no volvió anoche. Puedo sentir las vibraciones frías de las máquinas de cuarzo...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Inventory Control Bar -->
+        <div class="bg-stone-950 p-3 rounded-lg border border-stone-800 shadow-xl">
+            <div class="flex justify-between items-center mb-2">
+                <span class="font-cinzel text-xs text-amber-500 tracking-widest uppercase flex items-center gap-2">
+                    <i class="fa-solid fa-suitcase"></i> Inventario de Eleonora
+                </span>
+                <span id="inventory-hint" class="text-[11px] text-stone-500 italic font-typewriter">Haz clic en un objeto para seleccionarlo</span>
+            </div>
+
+            <div class="grid grid-cols-6 gap-2 sm:gap-3">
+                <div id="slot-0" onclick="selectInventoryItem(0)" class="inventory-slot aspect-square rounded flex flex-col items-center justify-center p-1 cursor-pointer"></div>
+                <div id="slot-1" onclick="selectInventoryItem(1)" class="inventory-slot aspect-square rounded flex flex-col items-center justify-center p-1 cursor-pointer"></div>
+                <div id="slot-2" onclick="selectInventoryItem(2)" class="inventory-slot aspect-square rounded flex flex-col items-center justify-center p-1 cursor-pointer"></div>
+                <div id="slot-3" onclick="selectInventoryItem(3)" class="inventory-slot aspect-square rounded flex flex-col items-center justify-center p-1 cursor-pointer"></div>
+                <div id="slot-4" onclick="selectInventoryItem(4)" class="inventory-slot aspect-square rounded flex flex-col items-center justify-center p-1 cursor-pointer"></div>
+                <div id="slot-5" onclick="selectInventoryItem(5)" class="inventory-slot aspect-square rounded flex flex-col items-center justify-center p-1 cursor-pointer"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full bg-stone-950 border-t border-stone-900 py-2 text-center text-xs text-stone-600 font-cinzel">
+        Las Luces de Eleonora &bull; Juego Completo de 5 Capítulos
+    </footer>
+
+
+    <!-- Chapter Transition Modal -->
+    <div id="chapter-modal" class="fixed inset-0 z-50 bg-black/92 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="bg-stone-950 victorian-border max-w-2xl w-full p-6 sm:p-8 rounded-lg flex flex-col items-center text-center space-y-4 shadow-2xl">
+            <span id="modal-chapter-number" class="font-cinzel text-amber-500 text-sm tracking-widest uppercase font-bold">Capítulo 1/5</span>
+            <h2 id="modal-chapter-title" class="font-cinzel-dec text-2xl sm:text-3xl text-amber-400">El Taller del Óptico</h2>
+            <div class="w-20 h-0.5 bg-amber-700/60 my-1"></div>
+            <p id="modal-chapter-desc" class="font-typewriter text-sm text-stone-300 leading-relaxed max-w-lg">
+                Eleonora explora el taller aislado de su padre tras su misteriosa desaparición.
+            </p>
+            <button id="btn-start-chapter" class="brass-button px-8 py-2.5 rounded font-cinzel font-bold text-sm mt-4">
+                Iniciar Capítulo
+            </button>
+        </div>
+    </div>
+
+
+    <!-- Full Narrative Ending Modal -->
+    <div id="ending-modal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-lg hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-stone-950 victorian-border max-w-3xl w-full p-6 sm:p-10 rounded-lg flex flex-col items-center text-center space-y-6 shadow-2xl my-auto">
+            <i class="fa-solid fa-sun text-amber-400 text-4xl sm:text-5xl animate-bounce"></i>
+            <h2 class="font-cinzel-dec text-2xl sm:text-4xl text-amber-300">Epílogo: La Luz al Amanecer</h2>
+            <div class="w-28 h-0.5 bg-amber-600"></div>
+            
+            <div class="font-typewriter text-xs sm:text-sm text-stone-200 leading-relaxed space-y-4 text-justify max-w-2xl bg-stone-900/60 p-4 rounded border border-stone-800">
+                <p>
+                    Al alinear las tres frecuencias vocales (<strong>Memoria, Emoción y Aceptación</strong>), la entidad esquelética del <em>Hombre del Diapasón</em> comenzó a agrietarse. En su centro no había un monstruo, sino una Refracción nacida del propio dolor y la negación de Eleonora tras la pérdida de su padre.
+                </p>
+                <p>
+                    Con un estallido iridiscente de cuarzo, la figura se disolvió en miles de partículas doradas. De la refracción final emergió la resonancia cálida del padre de Eleonora. Aunque no podía oír sus palabras con los oídos, los Visores convirtieron la voz de su padre en una melodía vibrante de luz dorada:
+                </p>
+                <p class="text-amber-300 italic text-center text-sm font-semibold">
+                    "Eleonora, mi pequeña... los visores nunca fueron para devolverte el pasado, sino para que aprendieras a ver la hermosa música oculta en el silencio del mundo."
+                </p>
+                <p>
+                    Eleonora caminó hacia el exterior del taller. El sol de la mañana despuntaba sobre el bosque de tejos. Ajustó perilla por última vez a sus Visores de Cuarzo: ya no los necesitaba para huir de la realidad, sino para admirar los colores eternos del mundo que la rodeaba.
+                </p>
+            </div>
+
+            <button onclick="location.reload()" class="brass-button px-8 py-3 rounded font-cinzel font-bold text-sm tracking-wider">
+                Volver a Jugar
+            </button>
+        </div>
+    </div>
+
+
+    <!-- Lore Compendium Modal -->
+    <div id="lore-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-6">
+        <div class="bg-stone-950 victorian-border max-w-3xl w-full max-h-[85vh] rounded-lg flex flex-col overflow-hidden shadow-2xl">
+            
+            <div class="bg-stone-900 p-4 border-b border-stone-800 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-book-open text-amber-500 text-xl"></i>
+                    <h2 class="font-cinzel-dec text-lg sm:text-xl text-amber-400">Diario de Lore & Archivos</h2>
+                </div>
+                <button id="btn-close-lore" class="text-stone-400 hover:text-amber-400 text-xl font-bold px-2">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="flex border-b border-stone-800 bg-stone-900/50 text-xs sm:text-sm font-cinzel">
+                <button onclick="switchLoreTab('premise')" id="tab-premise" class="flex-1 py-2.5 px-3 text-center text-amber-400 border-b-2 border-amber-500 font-bold bg-stone-800/40">Historia</button>
+                <button onclick="switchLoreTab('characters')" id="tab-characters" class="flex-1 py-2.5 px-3 text-center text-stone-400 hover:text-amber-200">Personajes</button>
+                <button onclick="switchLoreTab('chapters')" id="tab-chapters" class="flex-1 py-2.5 px-3 text-center text-stone-400 hover:text-amber-200">Capítulos</button>
+            </div>
+
+            <div id="lore-content" class="p-4 sm:p-6 overflow-y-auto flex-1 font-typewriter text-xs sm:text-sm text-stone-300 leading-relaxed space-y-4">
+                <!-- Dynamically Rendered -->
+            </div>
+
+            <div class="bg-stone-900 p-3 border-t border-stone-800 text-right">
+                <button id="btn-close-lore-footer" class="brass-button px-4 py-1.5 rounded text-xs font-cinzel">Cerrar Diario</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- GAME SCRIPT LOGIC -->
+    <script>
+        /* ==========================================================================
+           SVG ART RESOURCE DICTIONARY (Characters, Objects, Entities)
+           ========================================================================== */
+        const ART_ASSETS = {
+            eleonora: `
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                    <circle cx="50" cy="50" r="45" fill="#120c08" stroke="#8a6c43" stroke-width="2"/>
+                    <!-- Hair & Hood -->
+                    <path d="M 25 65 Q 20 30 50 20 Q 80 30 75 65 Q 50 85 25 65 Z" fill="#2d1b10"/>
+                    <ellipse cx="50" cy="48" rx="20" ry="24" fill="#f2d3b0"/>
+                    <!-- Goggles / Visores de Cuarzo -->
+                    <rect x="28" y="40" width="18" height="14" rx="4" fill="#3a2712" stroke="#d4af37" stroke-width="2"/>
+                    <rect x="54" y="40" width="18" height="14" rx="4" fill="#3a2712" stroke="#d4af37" stroke-width="2"/>
+                    <line x1="46" y1="47" x2="54" y2="47" stroke="#d4af37" stroke-width="3"/>
+                    <circle cx="37" cy="47" r="5" fill="#00ffe5" opacity="0.85"/>
+                    <circle cx="63" cy="47" r="5" fill="#ff00a0" opacity="0.85"/>
+                    <!-- Victorian Dress Collar -->
+                    <path d="M 32 72 Q 50 82 68 72 L 72 90 L 28 90 Z" fill="#e8ded1" stroke="#4a3525" stroke-width="1.5"/>
+                </svg>
+            `,
+            cadenza: `
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                    <!-- Owl Automaton -->
+                    <rect x="25" y="20" width="50" height="60" rx="20" fill="#4a3421" stroke="#cbb06d" stroke-width="3"/>
+                    <!-- Brass Plates -->
+                    <ellipse cx="50" cy="50" rx="18" ry="22" fill="#291c10" stroke="#8a6730" stroke-width="2"/>
+                    <circle cx="38" cy="38" r="8" fill="#15100a" stroke="#d4af37" stroke-width="2"/>
+                    <circle cx="62" cy="38" r="8" fill="#15100a" stroke="#d4af37" stroke-width="2"/>
+                    <circle cx="38" cy="38" r="3" fill="#ffcc00"/>
+                    <circle cx="62" cy="38" r="3" fill="#ffcc00"/>
+                    <!-- Beak & Gears -->
+                    <polygon points="50,44 44,52 56,52" fill="#d4af37"/>
+                    <circle cx="50" cy="62" r="7" fill="none" stroke="#d4af37" stroke-width="2" stroke-dasharray="3 2"/>
+                    <!-- Key on Top -->
+                    <path d="M 50 20 L 50 8 M 44 8 L 56 8" stroke="#d4af37" stroke-width="3"/>
+                </svg>
+            `,
+            tuningMan: `
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                    <!-- Slender Shadow Villain -->
+                    <path d="M 30 95 L 35 45 L 50 10 L 65 45 L 70 95 Z" fill="#0a080d"/>
+                    <!-- Giant Tuning Fork Face -->
+                    <path d="M 40 18 L 40 40 Q 50 48 60 40 L 60 18" fill="none" stroke="#cbb06d" stroke-width="4"/>
+                    <line x1="50" y1="45" x2="50" y2="70" stroke="#cbb06d" stroke-width="5"/>
+                    <circle cx="40" cy="16" r="3" fill="#00ffe5"/>
+                    <circle cx="60" cy="16" r="3" fill="#ff007f"/>
+                    <!-- Ethereal Glow -->
+                    <circle cx="50" cy="40" r="35" fill="none" stroke="#00ffe5" stroke-width="1" opacity="0.4" stroke-dasharray="4 4"/>
+                </svg>
+            `,
+            desk: `
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                    <rect x="10" y="35" width="80" height="45" rx="3" fill="#3b2518" stroke="#785335" stroke-width="3"/>
+                    <rect x="18" y="42" width="28" height="14" fill="#24160d" stroke="#523924" stroke-width="1.5"/>
+                    <rect x="54" y="42" width="28" height="14" fill="#24160d" stroke="#523924" stroke-width="1.5"/>
+                    <circle cx="32" cy="49" r="2" fill="#d4af37"/>
+                    <circle cx="68" cy="49" r="2" fill="#d4af37"/>
+                    <!-- Brass Lock -->
+                    <rect x="45" y="62" width="10" height="12" fill="#d4af37" rx="2"/>
+                    <circle cx="50" cy="66" r="2" fill="#120c08"/>
+                </svg>
+            `,
+            ghostResonance: `
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                    <path d="M 50 15 Q 75 30 70 65 Q 50 85 30 65 Q 25 30 50 15 Z" fill="url(#spectralGrad)" opacity="0.85"/>
+                    <defs>
+                        <linearGradient id="spectralGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#00ffe5"/>
+                            <stop offset="100%" stop-color="#ff00a0"/>
+                        </linearGradient>
+                    </defs>
+                    <ellipse cx="42" cy="40" rx="4" ry="6" fill="#051217"/>
+                    <ellipse cx="58" cy="40" rx="4" ry="6" fill="#051217"/>
+                    <circle cx="50" cy="58" r="6" fill="none" stroke="#051217" stroke-width="2"/>
+                </svg>
+            `,
+            organ: `
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                    <rect x="15" y="20" width="70" height="65" fill="#2d1d13" stroke="#8a6c43" stroke-width="3"/>
+                    <!-- Pipes -->
+                    <rect x="22" y="10" width="6" height="40" fill="#b5945b"/>
+                    <rect x="32" y="5" width="6" height="45" fill="#d4af37"/>
+                    <rect x="42" y="2" width="6" height="48" fill="#e8c878"/>
+                    <rect x="52" y="5" width="6" height="45" fill="#d4af37"/>
+                    <rect x="62" y="10" width="6" height="40" fill="#b5945b"/>
+                    <!-- Keyboard -->
+                    <rect x="20" y="60" width="60" height="15" fill="#f7f3e6" stroke="#22150c"/>
+                    <line x1="30" y1="60" x2="30" y2="75" stroke="#000"/>
+                    <line x1="40" y1="60" x2="40" y2="75" stroke="#000"/>
+                    <line x1="50" y1="60" x2="50" y2="75" stroke="#000"/>
+                    <line x1="60" y1="60" x2="60" y2="75" stroke="#000"/>
+                    <line x1="70" y1="60" x2="70" y2="75" stroke="#000"/>
+                </svg>
+            `,
+            pillar: `
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                    <rect x="35" y="30" width="30" height="58" fill="#302722" stroke="#5e493b" stroke-width="2"/>
+                    <!-- Tuning Fork Head -->
+                    <path d="M 38 30 L 38 8 Q 50 14 62 8 L 62 30" fill="none" stroke="#cbb06d" stroke-width="4"/>
+                    <circle cx="50" cy="50" r="8" fill="#120d0a" stroke="#d4af37" stroke-width="2"/>
+                </svg>
+            `,
+            vessel: `
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                    <path d="M 35 20 L 65 20 L 60 35 L 75 75 Q 75 88 50 88 Q 25 88 25 75 L 40 35 Z" fill="rgba(0, 255, 200, 0.2)" stroke="#00ffcc" stroke-width="2"/>
+                    <ellipse cx="50" cy="70" rx="18" ry="10" fill="#00ffcc" opacity="0.6"/>
+                </svg>
+            `
+        };
+
+
+        /* ==========================================================================
+           GAME STATE & CHAPTER CONFIGURATION
+           ========================================================================== */
+        const gameState = {
+            currentChapter: 1,
+            isRefracted: false,
+            inventory: [],
+            selectedItemIndex: null,
+
+            // Chapter States
+            ch1: { unlockedDesk: false, gearCollected: false, cadenzaRepaired: false, keyFound: false },
+            ch2: { pillarsRealigned: [false, false, false], pathCleared: false },
+            ch3: { sequenceInput: [], organSolved: false },
+            ch4: { soulsFreed: 0, pumpDisabled: false, masterKeyForged: false },
+            ch5: { frequencies: { memory: false, emotion: false, acceptance: false }, gameFinished: false },
+
+            // Web Audio State
+            audioCtx: null,
+            isAudioEnabled: false,
+            droneOsc: null,
+            droneGain: null
+        };
+
+        const CHAPTER_DATA = {
+            1: {
+                title: "El Taller del Óptico",
+                badge: "Capítulo 1/5",
+                desc: "Eleonora explora el taller de su padre tras su desaparición. Para abrir la escotilla debe encontrar la llave oculta en el Plano Refractado y reparar al autómata Señor Cadenza.",
+                objective: "Encuentra la llave en el Plano Refractado para abrir el escritorio, reparar a Cadenza y desbloquear la escotilla.",
+                initialItem: { id: 'notebook', name: 'Diario del Óptico', icon: 'fa-book-skull', desc: 'Cuaderno escrito por papá. Dice: "Las frecuencias reales del sonido se ocultan en la refracción del cuarzo."' }
+            },
+            2: {
+                title: "El Bosque de los Tejos Murmurantes",
+                badge: "Capítulo 2/5",
+                desc: "Un bosque cubierto de niebla donde las raíces son cuerdas vocales vivas. Eleonora debe alinear 3 pilares de diapasón para abrir el paso al Sanatorio.",
+                objective: "Activa los Visores de Cuarzo y ajusta los 3 pilares de diapasón en el Plano Refractado para disipar las espinas.",
+                initialItem: { id: 'tuning_fork', name: 'Diapasón de Bolsillo', icon: 'fa-guitar', desc: 'Herramienta de afinar usada por los ópticos victorianos.' }
+            },
+            3: {
+                title: "El Teatro del Silencio",
+                badge: "Capítulo 3/5",
+                desc: "Un teatro y laboratorio reconvertido. Eleonora debe resolver el acertijo de tonos del Órgano (Do - Mi - Sol) para apagar al guardia de cera.",
+                objective: "Toca la secuencia correcta de notas (3 tonos) en el Órgano del Teatro para paralizar al guardia de cera.",
+                initialItem: { id: 'sheet_music', name: 'Partitura Encriptada', icon: 'fa-music', desc: 'Contiene 3 tonos armónicos sagrados.' }
+            },
+            4: {
+                title: "La Sociedad del Criterio",
+                badge: "Capítulo 4/5",
+                desc: "Un taller subterráneo donde se extraían voces. Eleonora debe liberar 2 almas atrapadas, apagar la bomba de mercurio y forjar la Llave Maestra.",
+                objective: "Libera las 2 almas en el Plano Refractado, desactiva la bomba de mercurio y forja la Llave Teúrgica.",
+                initialItem: { id: 'empty_vial', name: 'Frasco de Resonancia', icon: 'fa-flask', desc: 'Vasija de cristal para contener esencias vibracionales.' }
+            },
+            5: {
+                title: "El Gran Cristal Teúrgico",
+                badge: "Capítulo 5/5",
+                desc: "Confrontación final contra El Hombre del Diapasón. Eleonora debe proyectar sus tres frecuencias vocales internas: Memoria, Emoción y Aceptación.",
+                objective: "Enfrenta al Hombre del Diapasón: Sincroniza las 3 frecuencias vocales internas de Eleonora.",
+                initialItem: { id: 'master_key', name: 'Llave Teúrgica', icon: 'fa-key', desc: 'Forjada con cristal puro y la luz de las almas liberadas.' }
+            }
+        };
+
+
+        /* ==========================================================================
+           INITIALIZATION & AUDIO SYSTEM
+           ========================================================================== */
+        window.addEventListener('DOMContentLoaded', () => {
+            // UI Listeners
+            document.getElementById('btn-toggle-prism').addEventListener('click', togglePrismVision);
+            document.getElementById('btn-toggle-audio').addEventListener('click', toggleAudio);
+            document.getElementById('btn-open-lore').addEventListener('click', openLoreModal);
+            document.getElementById('btn-close-lore').addEventListener('click', closeLoreModal);
+            document.getElementById('btn-close-lore-footer').addEventListener('click', closeLoreModal);
+            document.getElementById('btn-start-chapter').addEventListener('click', startCurrentChapterFromModal);
+
+            window.addEventListener('resize', () => drawChapterCanvas());
+
+            loadChapter(1);
+            renderLoreTab('premise');
+            setSpeakerAvatar(ART_ASSETS.eleonora);
+        });
+
+        function initAudioContext() {
+            if (!gameState.audioCtx) {
+                const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+                gameState.audioCtx = new AudioCtxClass();
+            }
+            if (gameState.audioCtx.state === 'suspended') {
+                gameState.audioCtx.resume();
+            }
+        }
+
+        function toggleAudio() {
+            initAudioContext();
+            gameState.isAudioEnabled = !gameState.isAudioEnabled;
+
+            const icon = document.getElementById('audio-icon');
+            const status = document.getElementById('audio-status');
+
+            if (gameState.isAudioEnabled) {
+                icon.className = 'fa-solid fa-volume-high text-amber-400';
+                status.innerText = 'Audio: ON';
+                startAmbientSound();
+                playSfx('click');
+            } else {
+                icon.className = 'fa-solid fa-volume-xmark text-stone-400';
+                status.innerText = 'Audio: OFF';
+                stopAmbientSound();
+            }
+        }
+
+        function startAmbientSound() {
+            if (!gameState.isAudioEnabled || !gameState.audioCtx) return;
+            stopAmbientSound();
+
+            gameState.droneOsc = gameState.audioCtx.createOscillator();
+            gameState.droneGain = gameState.audioCtx.createGain();
+            const now = gameState.audioCtx.currentTime;
+
+            if (gameState.isRefracted) {
+                gameState.droneOsc.type = 'sine';
+                gameState.droneOsc.frequency.setValueAtTime(210 + (gameState.currentChapter * 25), now);
+                gameState.droneGain.gain.setValueAtTime(0.04, now);
+            } else {
+                gameState.droneOsc.type = 'sawtooth';
+                gameState.droneOsc.frequency.setValueAtTime(55 + (gameState.currentChapter * 6), now);
+                gameState.droneGain.gain.setValueAtTime(0.025, now);
+            }
+
+            gameState.droneOsc.connect(gameState.droneGain);
+            gameState.droneGain.connect(gameState.audioCtx.destination);
+            gameState.droneOsc.start();
+        }
+
+        function stopAmbientSound() {
+            if (gameState.droneOsc) {
+                try {
+                    gameState.droneOsc.stop();
+                    gameState.droneOsc.disconnect();
+                } catch(e){}
+                gameState.droneOsc = null;
+            }
+        }
+
+        function playSfx(type) {
+            if (!gameState.isAudioEnabled || !gameState.audioCtx) return;
+
+            const osc = gameState.audioCtx.createOscillator();
+            const gain = gameState.audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(gameState.audioCtx.destination);
+            const now = gameState.audioCtx.currentTime;
+
+            if (type === 'prism') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(440, now);
+                osc.frequency.exponentialRampToValueAtTime(880, now + 0.35);
+                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+                osc.start(now); osc.stop(now + 0.5);
+            } else if (type === 'click') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(240, now);
+                gain.gain.setValueAtTime(0.05, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+                osc.start(now); osc.stop(now + 0.08);
+            } else if (type === 'solve') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(329.63, now);
+                osc.frequency.setValueAtTime(440.00, now + 0.12);
+                osc.frequency.setValueAtTime(659.25, now + 0.25);
+                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+                osc.start(now); osc.stop(now + 0.6);
+            } else if (type === 'note') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(280 + Math.random()*250, now);
+                gain.gain.setValueAtTime(0.08, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                osc.start(now); osc.stop(now + 0.25);
+            }
+        }
+
+
+        /* ==========================================================================
+           CHAPTER MANAGEMENT & RENDERING
+           ========================================================================== */
+        function loadChapter(chapterNum) {
+            gameState.currentChapter = chapterNum;
+            const data = CHAPTER_DATA[chapterNum];
+
+            if (!gameState.inventory.some(i => i.id === data.initialItem.id)) {
+                addItemToInventory(data.initialItem);
+            }
+
+            document.getElementById('chapter-number-badge').innerText = data.badge;
+            document.getElementById('chapter-title-display').innerText = data.title;
+            document.getElementById('objective-text').innerText = data.objective;
+
+            document.getElementById('modal-chapter-number').innerText = data.badge;
+            document.getElementById('modal-chapter-title').innerText = data.title;
+            document.getElementById('modal-chapter-desc').innerText = data.desc;
+            document.getElementById('chapter-modal').classList.remove('hidden');
+
+            renderChapterScene();
+        }
+
+        function startCurrentChapterFromModal() {
+            playSfx('click');
+            document.getElementById('chapter-modal').classList.add('hidden');
+            startAmbientSound();
+        }
+
+        function renderChapterScene() {
+            drawChapterCanvas();
+            renderHotspots();
+        }
+
+        /* High-Quality Procedural Vector Background Environments */
+        function drawChapterCanvas() {
+            const canvas = document.getElementById('chapter-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.offsetWidth || 800;
+            canvas.height = canvas.offsetHeight || 450;
+
+            const w = canvas.width;
+            const h = canvas.height;
+            const isRef = gameState.isRefracted;
+
+            ctx.clearRect(0, 0, w, h);
+
+            if (gameState.currentChapter === 1) {
+                // Chapter 1: Optician Workshop
+                const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+                bgGrad.addColorStop(0, isRef ? '#021824' : '#1a100a');
+                bgGrad.addColorStop(1, isRef ? '#120228' : '#080403');
+                ctx.fillStyle = bgGrad; ctx.fillRect(0, 0, w, h);
+
+                // Victorian Arch Windows & Glassware Shelves
+                ctx.strokeStyle = isRef ? '#00f0ffaa' : '#8a6a4388';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(w*0.5, h*0.28, 80, Math.PI, 0);
+                ctx.lineTo(w*0.5 + 80, h*0.62);
+                ctx.lineTo(w*0.5 - 80, h*0.62);
+                ctx.closePath();
+                ctx.stroke();
+
+                // Shelves
+                ctx.fillStyle = isRef ? '#0a3040' : '#2b1b13';
+                ctx.fillRect(w*0.05, h*0.25, w*0.2, 10);
+                ctx.fillRect(w*0.75, h*0.25, w*0.2, 10);
+            } 
+            else if (gameState.currentChapter === 2) {
+                // Chapter 2: Yew Forest
+                const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+                bgGrad.addColorStop(0, isRef ? '#052e2e' : '#0c170e');
+                bgGrad.addColorStop(1, isRef ? '#200336' : '#030804');
+                ctx.fillStyle = bgGrad; ctx.fillRect(0, 0, w, h);
+
+                // Trees & Spectral Roots
+                ctx.fillStyle = isRef ? '#00ffc833' : '#172e1c55';
+                for(let i = 0; i < 6; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(i*140 + 20, h);
+                    ctx.lineTo(i*140 + 40, h*0.1);
+                    ctx.lineTo(i*140 + 70, h*0.1);
+                    ctx.lineTo(i*140 + 90, h);
+                    ctx.fill();
+                }
+            } 
+            else if (gameState.currentChapter === 3) {
+                // Chapter 3: Opera / Sanatorium
+                const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+                bgGrad.addColorStop(0, isRef ? '#3d0042' : '#1d0c18');
+                bgGrad.addColorStop(1, isRef ? '#002b3a' : '#0a0508');
+                ctx.fillStyle = bgGrad; ctx.fillRect(0, 0, w, h);
+
+                // Stage Curtains & Balconies
+                ctx.fillStyle = isRef ? '#ff007f33' : '#4a1525aa';
+                ctx.fillRect(0, 0, w*0.18, h);
+                ctx.fillRect(w*0.82, 0, w*0.18, h);
+            } 
+            else if (gameState.currentChapter === 4) {
+                // Chapter 4: Underground Cult Laboratory
+                const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+                bgGrad.addColorStop(0, isRef ? '#42001a' : '#1c1310');
+                bgGrad.addColorStop(1, isRef ? '#004235' : '#080605');
+                ctx.fillStyle = bgGrad; ctx.fillRect(0, 0, w, h);
+
+                // Pipes & Vats
+                ctx.strokeStyle = isRef ? '#00ffccaa' : '#5a4332aa';
+                ctx.lineWidth = 4;
+                ctx.strokeRect(w*0.2, h*0.35, w*0.6, h*0.5);
+            } 
+            else if (gameState.currentChapter === 5) {
+                // Chapter 5: Grand Crystal Realm
+                const bgGrad = ctx.createRadialGradient(w/2, h/2, 10, w/2, h/2, w*0.65);
+                bgGrad.addColorStop(0, isRef ? '#00ffe588' : '#5e432f88');
+                bgGrad.addColorStop(1, isRef ? '#1a002e' : '#050303');
+                ctx.fillStyle = bgGrad; ctx.fillRect(0, 0, w, h);
+
+                // Concentric Gears & Crystal Geometry
+                ctx.strokeStyle = isRef ? '#00ffffbb' : '#8a6c3e99';
+                ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.arc(w/2, h/2, 120, 0, Math.PI*2); ctx.stroke();
+                ctx.beginPath(); ctx.arc(w/2, h/2, 70, 0, Math.PI*2); ctx.stroke();
+            }
+        }
+
+
+        /* ==========================================================================
+           DYNAMIC HOTSPOTS PER CHAPTER WITH CUSTOM ARTWORKS
+           ========================================================================== */
+        function renderHotspots() {
+            const layer = document.getElementById('hotspots-layer');
+            layer.innerHTML = '';
+            const ch = gameState.currentChapter;
+            const isRef = gameState.isRefracted;
+
+            if (ch === 1) {
+                createHotspot(layer, 'hs-desk', '12%', '52%', '24%', '28%', ART_ASSETS.desk, 'Escritorio de Papá', () => handleCh1Desk());
+                createHotspot(layer, 'hs-cadenza', '66%', '45%', '20%', '36%', ART_ASSETS.cadenza, gameState.ch1.cadenzaRepaired ? 'Señor Cadenza (Activo)' : 'Señor Cadenza (Averiado)', () => handleCh1Cadenza());
+                
+                if (isRef) {
+                    createHotspot(layer, 'hs-ghost', '42%', '22%', '18%', '30%', ART_ASSETS.ghostResonance, 'Resonancia Espectral', () => handleCh1Ghost(), true);
+                } else {
+                    createHotspot(layer, 'hs-hatch', '42%', '70%', '18%', '24%', `<i class="fa-solid fa-door-closed text-3xl text-amber-500"></i>`, 'Escotilla al Bosque', () => handleCh1Hatch());
+                }
+            }
+            else if (ch === 2) {
+                createHotspot(layer, 'hs-p1', '12%', '32%', '18%', '34%', ART_ASSETS.pillar, `Pilar I (${gameState.ch2.pillarsRealigned[0]?'Afinado':'Desafinado'})`, () => handleCh2Pillar(0));
+                createHotspot(layer, 'hs-p2', '41%', '28%', '18%', '34%', ART_ASSETS.pillar, `Pilar II (${gameState.ch2.pillarsRealigned[1]?'Afinado':'Desafinado'})`, () => handleCh2Pillar(1));
+                createHotspot(layer, 'hs-p3', '70%', '32%', '18%', '34%', ART_ASSETS.pillar, `Pilar III (${gameState.ch2.pillarsRealigned[2]?'Afinado':'Desafinado'})`, () => handleCh2Pillar(2));
+
+                createHotspot(layer, 'hs-path', '38%', '68%', '24%', '24%', `<i class="fa-solid fa-tree text-3xl text-emerald-600"></i>`, gameState.ch2.pathCleared ? 'Paso al Sanatorio' : 'Espinos Murmurantes', () => handleCh2Path());
+            }
+            else if (ch === 3) {
+                createHotspot(layer, 'hs-organ', '32%', '22%', '36%', '40%', ART_ASSETS.organ, 'Órgano de Tonos', () => handleCh3Organ());
+                createHotspot(layer, 'hs-guard', '72%', '38%', '20%', '38%', `<i class="fa-solid fa-user-astronaut text-3xl text-amber-600"></i>`, gameState.ch3.organSolved ? 'Guardia Inerte' : 'Guardia de Cera', () => handleCh3Guard());
+                createHotspot(layer, 'hs-elevator', '8%', '42%', '20%', '38%', `<i class="fa-solid fa-dungeon text-3xl text-stone-400"></i>`, 'Ascensor Subterráneo', () => handleCh3Elevator());
+            }
+            else if (ch === 4) {
+                if (isRef) {
+                    createHotspot(layer, 'hs-soul1', '12%', '28%', '20%', '30%', ART_ASSETS.ghostResonance, 'Alma Resonante A', () => handleCh4Soul(1), true);
+                    createHotspot(layer, 'hs-soul2', '68%', '28%', '20%', '30%', ART_ASSETS.ghostResonance, 'Alma Resonante B', () => handleCh4Soul(2), true);
+                }
+                createHotspot(layer, 'hs-pump', '38%', '38%', '24%', '34%', ART_ASSETS.vessel, gameState.ch4.pumpDisabled ? 'Bomba Desactivada' : 'Bomba de Mercurio', () => handleCh4Pump());
+                createHotspot(layer, 'hs-forge', '40%', '72%', '20%', '22%', `<i class="fa-solid fa-fire-burner text-3xl text-amber-500"></i>`, 'Forja de Cristal', () => handleCh4Forge());
+            }
+            else if (ch === 5) {
+                createHotspot(layer, 'hs-boss', '36%', '15%', '28%', '45%', ART_ASSETS.tuningMan, 'El Hombre del Diapasón', () => handleCh5Boss());
+                createHotspot(layer, 'hs-f1', '12%', '65%', '22%', '24%', `<i class="fa-solid fa-brain text-2xl text-cyan-400"></i>`, gameState.ch5.frequencies.memory ? 'Memoria (OK)' : 'Frecuencia: Memoria', () => handleCh5Voice('memory'));
+                createHotspot(layer, 'hs-f2', '39%', '65%', '22%', '24%', `<i class="fa-solid fa-heart-pulse text-2xl text-pink-500"></i>`, gameState.ch5.frequencies.emotion ? 'Emoción (OK)' : 'Frecuencia: Emoción', () => handleCh5Voice('emotion'));
+                createHotspot(layer, 'hs-f3', '66%', '65%', '22%', '24%', `<i class="fa-solid fa-feather text-2xl text-amber-300"></i>`, gameState.ch5.frequencies.acceptance ? 'Aceptación (OK)' : 'Frecuencia: Aceptación', () => handleCh5Voice('acceptance'));
+            }
+        }
+
+        function createHotspot(parent, id, left, top, width, height, artContent, label, onClick, isRefractedOnly = false) {
+            const div = document.createElement('div');
+            div.id = id;
+            div.style.left = left;
+            div.style.top = top;
+            div.style.width = width;
+            div.style.height = height;
+            div.onclick = onClick;
+
+            const isRef = gameState.isRefracted;
+            const styleClass = (isRef || isRefractedOnly) ? 'hotspot-refracted' : 'hotspot-normal';
+
+            div.className = `hotspot-node absolute cursor-pointer rounded ${styleClass} flex flex-col items-center justify-center p-1.5`;
+
+            const labelColor = isRef ? 'text-cyan-200 neon-text-refracted' : 'text-amber-200/90';
+
+            div.innerHTML = `
+                <div class="w-full h-full flex-1 flex items-center justify-center overflow-hidden pointer-events-none">
+                    ${artContent}
+                </div>
+                <span class="text-[10px] sm:text-xs font-cinzel text-center ${labelColor} bg-stone-950/90 px-2 py-0.5 rounded border border-stone-800 mt-1">
+                    ${label}
+                </span>
+            `;
+            parent.appendChild(div);
+        }
+
+
+        /* ==========================================================================
+           REALITY TOGGLE (PRISM SWITCH)
+           ========================================================================== */
+        function togglePrismVision() {
+            gameState.isRefracted = !gameState.isRefracted;
+            playSfx('prism');
+
+            const overlay = document.getElementById('prism-overlay');
+            overlay.classList.add('flash');
+            setTimeout(() => overlay.classList.remove('flash'), 800);
+
+            const sceneContainer = document.getElementById('scene-container');
+            const realityIndicator = document.getElementById('reality-indicator');
+            const prismBtnText = document.getElementById('prism-btn-text');
+
+            if (gameState.isRefracted) {
+                sceneContainer.className = 'relative w-full h-full refracted-world bg-cover bg-center transition-all duration-700';
+                realityIndicator.innerText = 'Plano Refractado (Espectral)';
+                realityIndicator.className = 'font-cinzel font-bold text-xs sm:text-sm text-cyan-400 uppercase tracking-widest neon-text-refracted';
+                prismBtnText.innerText = 'Volver a Realidad de Cera';
+                updateDialogue('Eleonora "Nora" Vance', 'Giro las perillas del visor. El entorno explota en refracciones de cuarzo y sombras luminosas.', ART_ASSETS.eleonora);
+            } else {
+                sceneContainer.className = 'relative w-full h-full normal-world bg-cover bg-center transition-all duration-700';
+                realityIndicator.innerText = 'Mundo de Cera (Real)';
+                realityIndicator.className = 'font-cinzel font-bold text-xs sm:text-sm text-amber-400 uppercase tracking-widest';
+                prismBtnText.innerText = 'Activar Visores de Cuarzo';
+                updateDialogue('Eleonora "Nora" Vance', 'Regreso al mundo victoriano frío y silencioso.', ART_ASSETS.eleonora);
+            }
+
+            renderChapterScene();
+            startAmbientSound();
+        }
+
+
+        /* ==========================================================================
+           CHAPTER PUZZLE LOGIC
+           ========================================================================== */
+        // Chapter 1
+        function handleCh1Desk() {
+            playSfx('click');
+            const selected = getSelectedItem();
+            if (gameState.ch1.unlockedDesk) {
+                updateDialogue('Escritorio', 'Ya abriste el escritorio y tomaste el Engranaje de Latón.', ART_ASSETS.desk);
+            } else if (selected && selected.id === 'key_ch1') {
+                gameState.ch1.unlockedDesk = true;
+                gameState.ch1.gearCollected = true;
+                removeItemFromInventory('key_ch1');
+                addItemToInventory({ id: 'gear', name: 'Engranaje de Latón', icon: 'fa-gear', desc: 'Engranaje para la caja torácica de Cadenza.' });
+                playSfx('solve');
+                updateDialogue('Eleonora', '¡La llave encajó perfectamente! Encontré un Engranaje de Latón.', ART_ASSETS.eleonora);
+                renderHotspots();
+            } else {
+                updateDialogue('Escritorio de Papá', 'Está cerrado con un cerrojo de latón. Necesitas una llave.', ART_ASSETS.desk);
+            }
+        }
+
+        function handleCh1Ghost() {
+            playSfx('click');
+            if (!gameState.ch1.keyFound) {
+                gameState.ch1.keyFound = true;
+                addItemToInventory({ id: 'key_ch1', name: 'Llave de Bronce', icon: 'fa-key', desc: 'Llave recuperada de la refracción espectral.' });
+                playSfx('solve');
+                updateDialogue('Resonancia', 'La sombra espectral se disuelve dejando caer una Llave de Bronce.', ART_ASSETS.ghostResonance);
+            } else {
+                updateDialogue('Resonancia', 'El eco vibracional ya entregó su objeto.', ART_ASSETS.ghostResonance);
+            }
+        }
+
+        function handleCh1Cadenza() {
+            playSfx('click');
+            const selected = getSelectedItem();
+            if (gameState.ch1.cadenzaRepaired) {
+                updateDialogue('Señor Cadenza', '♪♫ (Cadenza emite un timbre alegre e indica la escotilla del suelo).', ART_ASSETS.cadenza);
+            } else if (selected && selected.id === 'gear') {
+                gameState.ch1.cadenzaRepaired = true;
+                removeItemFromInventory('gear');
+                playSfx('solve');
+                updateDialogue('Señor Cadenza', '♪♫ ¡CLACK! Cadenza cobra vida y destraba la escotilla hacia el bosque.', ART_ASSETS.cadenza);
+                renderHotspots();
+            } else {
+                updateDialogue('Señor Cadenza', 'Le falta un engranaje clave en el pecho para funcionar.', ART_ASSETS.cadenza);
+            }
+        }
+
+        function handleCh1Hatch() {
+            playSfx('click');
+            if (gameState.ch1.cadenzaRepaired) {
+                playSfx('solve');
+                loadChapter(2);
+            } else {
+                updateDialogue('Escotilla', 'Está atrancada. Debes reparar al autómata Cadenza para activarla.', ART_ASSETS.eleonora);
+            }
+        }
+
+        // Chapter 2
+        function handleCh2Pillar(index) {
+            playSfx('note');
+            if (gameState.isRefracted) {
+                gameState.ch2.pillarsRealigned[index] = !gameState.ch2.pillarsRealigned[index];
+                playSfx('solve');
+                updateDialogue('Pilar de Diapasón', `Has alineado el Pilar ${index+1}. Refracción armónica reconfigurada.`, ART_ASSETS.pillar);
+                
+                if (gameState.ch2.pillarsRealigned.every(p => p === true)) {
+                    gameState.ch2.pathCleared = true;
+                    updateDialogue('Bosque de Tejos', '¡Los 3 pilares están alineados! Las espinas murmurantes se abren paso.', ART_ASSETS.eleonora);
+                }
+                renderHotspots();
+            } else {
+                updateDialogue('Pilar de Diapasón', 'En la realidad normal solo son rocas frías. Usa los Visores.', ART_ASSETS.pillar);
+            }
+        }
+
+        function handleCh2Path() {
+            playSfx('click');
+            if (gameState.ch2.pathCleared) {
+                playSfx('solve');
+                loadChapter(3);
+            } else {
+                updateDialogue('Espinos Murmurantes', 'El paso está bloqueado. Afina los 3 pilares en el Plano Refractado.', ART_ASSETS.eleonora);
+            }
+        }
+
+        // Chapter 3
+        function handleCh3Organ() {
+            playSfx('note');
+            const seq = gameState.ch3.sequenceInput;
+            seq.push('note');
+
+            if (seq.length >= 3) {
+                gameState.ch3.organSolved = true;
+                playSfx('solve');
+                updateDialogue('Órgano de Tonos', '♪♫ Tocaste la frecuencia correcta (Do-Mi-Sol). El guardia de cera queda paralizado.', ART_ASSETS.organ);
+                gameState.ch3.sequenceInput = [];
+                renderHotspots();
+            } else {
+                updateDialogue('Órgano de Tonos', `Pulsando tono ${seq.length}/3. Sigue la partitura armónica.`, ART_ASSETS.organ);
+            }
+        }
+
+        function handleCh3Guard() {
+            playSfx('click');
+            if (gameState.ch3.organSolved) {
+                updateDialogue('Guardia de Cera', 'El autómata ha quedado inactivo gracias a la melodía.', ART_ASSETS.eleonora);
+            } else {
+                updateDialogue('Guardia de Cera', 'Bloquea el ascensor. Desactívalo tocando el Órgano de Tonos.', ART_ASSETS.eleonora);
+            }
+        }
+
+        function handleCh3Elevator() {
+            playSfx('click');
+            if (gameState.ch3.organSolved) {
+                playSfx('solve');
+                loadChapter(4);
+            } else {
+                updateDialogue('Ascensor', 'El guardia de cera impide el acceso al ascensor subterráneo.', ART_ASSETS.eleonora);
+            }
+        }
+
+        // Chapter 4
+        function handleCh4Soul(num) {
+            playSfx('click');
+            gameState.ch4.soulsFreed++;
+            playSfx('solve');
+            updateDialogue('Alma Resonante', `Has liberado la energía del alma ${num}. Su resonancia llena el frasco de cristal.`, ART_ASSETS.ghostResonance);
+            if (gameState.ch4.soulsFreed >= 2) {
+                updateDialogue('Eleonora', '¡Ambas almas han sido liberadas! Ahora puedes apagar la bomba de mercurio.', ART_ASSETS.eleonora);
+            }
+        }
+
+        function handleCh4Pump() {
+            playSfx('click');
+            if (gameState.ch4.soulsFreed >= 2) {
+                gameState.ch4.pumpDisabled = true;
+                playSfx('solve');
+                updateDialogue('Bomba de Mercurio', 'Bomba desactivada. La forja de cristal está lista.', ART_ASSETS.vessel);
+                renderHotspots();
+            } else {
+                updateDialogue('Bomba de Mercurio', 'La bomba está protegida por energía de almas. Libéralas en el Plano Refractado.', ART_ASSETS.vessel);
+            }
+        }
+
+        function handleCh4Forge() {
+            playSfx('click');
+            if (gameState.ch4.pumpDisabled) {
+                gameState.ch4.masterKeyForged = true;
+                addItemToInventory({ id: 'master_key', name: 'Llave Teúrgica', icon: 'fa-key', desc: 'Llave Maestra forjada.' });
+                playSfx('solve');
+                updateDialogue('Forja de Cristal', '¡Has forjado la Llave Teúrgica de Cristal! Lista para la confrontación final.', ART_ASSETS.eleonora);
+                setTimeout(() => loadChapter(5), 1500);
+            } else {
+                updateDialogue('Forja de Cristal', 'Apaga primero la bomba de mercurio.', ART_ASSETS.eleonora);
+            }
+        }
+
+        // Chapter 5 & CONFRONTATION
+        function handleCh5Voice(type) {
+            playSfx('note');
+            gameState.ch5.frequencies[type] = true;
+            playSfx('solve');
+
+            const activeCount = Object.values(gameState.ch5.frequencies).filter(Boolean).length;
+            updateDialogue('Frecuencia Interior', `Sincronizada Frecuencia: ${type.toUpperCase()} (${activeCount}/3). El diapasón cruje.`, ART_ASSETS.eleonora);
+
+            renderHotspots();
+
+            if (activeCount >= 3 && !gameState.ch5.gameFinished) {
+                gameState.ch5.gameFinished = true;
+                playSfx('solve');
+                setTimeout(() => {
+                    document.getElementById('ending-modal').classList.remove('hidden');
+                }, 1000);
+            }
+        }
+
+        function handleCh5Boss() {
+            playSfx('click');
+            updateDialogue('El Hombre del Diapasón', 'No puedes escapar del silencio... ¡Ajusta tus 3 frecuencias internas para superarme!', ART_ASSETS.tuningMan);
+        }
+
+
+        /* ==========================================================================
+           INVENTORY SYSTEM
+           ========================================================================== */
+        function addItemToInventory(item) {
+            if (gameState.inventory.length < 6) {
+                gameState.inventory.push(item);
+                updateInventoryUI();
+            }
+        }
+
+        function removeItemFromInventory(itemId) {
+            gameState.inventory = gameState.inventory.filter(i => i.id !== itemId);
+            gameState.selectedItemIndex = null;
+            updateInventoryUI();
+        }
+
+        function selectInventoryItem(index) {
+            if (index >= gameState.inventory.length) return;
+            playSfx('click');
+
+            if (gameState.selectedItemIndex === index) {
+                gameState.selectedItemIndex = null;
+            } else {
+                gameState.selectedItemIndex = index;
+                const item = gameState.inventory[index];
+                updateDialogue('Objeto: ' + item.name, item.desc, ART_ASSETS.eleonora);
+            }
+            updateInventoryUI();
+        }
+
+        function getSelectedItem() {
+            if (gameState.selectedItemIndex !== null && gameState.selectedItemIndex < gameState.inventory.length) {
+                return gameState.inventory[gameState.selectedItemIndex];
+            }
+            return null;
+        }
+
+        function updateInventoryUI() {
+            for (let i = 0; i < 6; i++) {
+                const slot = document.getElementById(`slot-${i}`);
+                if (!slot) continue;
+
+                if (i < gameState.inventory.length) {
+                    const item = gameState.inventory[i];
+                    const isActive = gameState.selectedItemIndex === i;
+                    slot.className = `inventory-slot aspect-square rounded flex flex-col items-center justify-center p-1 cursor-pointer ${isActive ? 'active' : ''}`;
+                    slot.innerHTML = `
+                        <i class="fa-solid ${item.icon} text-amber-400 text-base sm:text-xl mb-0.5"></i>
+                        <span class="text-[9px] font-cinzel text-center text-amber-200 line-clamp-1">${item.name}</span>
+                    `;
+                } else {
+                    slot.className = 'inventory-slot aspect-square rounded flex flex-col items-center justify-center p-1 cursor-pointer';
+                    slot.innerHTML = `<span class="text-stone-700 text-[10px] font-typewriter">Vacío</span>`;
+                }
+            }
+        }
+
+        function setSpeakerAvatar(artSvg) {
+            const container = document.getElementById('avatar-container');
+            if (container) container.innerHTML = artSvg;
+        }
+
+        function updateDialogue(speaker, text, artSvg = ART_ASSETS.eleonora) {
+            document.getElementById('dialogue-speaker').innerText = speaker;
+            document.getElementById('dialogue-text').innerText = text;
+            setSpeakerAvatar(artSvg);
+        }
+
+
+        /* ==========================================================================
+           LORE MODAL COMPENDIUM
+           ========================================================================== */
+        function openLoreModal() {
+            playSfx('click');
+            document.getElementById('lore-modal').classList.remove('hidden');
+        }
+
+        function closeLoreModal() {
+            playSfx('click');
+            document.getElementById('lore-modal').classList.add('hidden');
+        }
+
+        function switchLoreTab(tabKey) {
+            playSfx('click');
+            ['premise', 'characters', 'chapters'].forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if (t === tabKey) {
+                    btn.className = 'flex-1 py-2.5 px-3 text-center text-amber-400 border-b-2 border-amber-500 font-bold bg-stone-800/40';
+                } else {
+                    btn.className = 'flex-1 py-2.5 px-3 text-center text-stone-400 hover:text-amber-200';
+                }
+            });
+            renderLoreTab(tabKey);
+        }
+
+        function renderLoreTab(tabKey) {
+            const container = document.getElementById('lore-content');
+            if (tabKey === 'premise') {
+                container.innerHTML = `
+                    <p><strong>Premisa:</strong> Eleonora Vance, una niña de 10 años en la Inglaterra victoriana de 1892, pierde el oído tras una fiebre. Su padre óptico diseña los <em>Visores de Cuarzo</em>, que traducen las frecuencias de sonido en espectros de luz.</p>
+                    <p>Al accionar las palancas de los visores, la realidad se divide entre el <strong>Mundo de Cera</strong> (la opaca realidad) y el <strong>Plano Refractado</strong> (una dimensión orgánica de sombras y luz).</p>
+                `;
+            } else if (tabKey === 'characters') {
+                container.innerHTML = `
+                    <ul class="space-y-3 text-xs">
+                        <li><strong class="text-amber-400">Eleonora Vance:</strong> Protagonista observadora que explora los secretos entre mundos.</li>
+                        <li><strong class="text-amber-400">Señor Cadenza:</strong> Autómata guía de madera fabricado por su padre.</li>
+                        <li><strong class="text-amber-400">El Hombre del Diapasón:</strong> Manifestación esquelética nacida de la negación del duelo.</li>
+                    </ul>
+                `;
+            } else if (tabKey === 'chapters') {
+                container.innerHTML = `
+                    <div class="space-y-2 text-xs">
+                        <p><strong class="text-amber-400">Capítulo 1:</strong> El Taller del Óptico.</p>
+                        <p><strong class="text-amber-400">Capítulo 2:</strong> El Bosque de los Tejos Murmurantes.</p>
+                        <p><strong class="text-amber-400">Capítulo 3:</strong> El Teatro del Silencio.</p>
+                        <p><strong class="text-amber-400">Capítulo 4:</strong> La Sociedad del Criterio.</p>
+                        <p><strong class="text-amber-400">Capítulo 5:</strong> El Gran Cristal Teúrgico & Epílogo.</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
