@@ -374,19 +374,25 @@
             cadenza: 'Gemini_Generated_Image_s1kd1rs1kd1rs1kd (1).jpg',
             tuningMan: 'Gemini_Generated_Image_s1kd1rs1kd1rs1kd (5).jpg',
             desk: 'Gemini_Generated_Image_s1kd1rs1kd1rs1kd.jpg',
-            ghostResonance: 'Gemini_Generated_Image_s1kd1rs1kd1rs1kd (6).jpg',
-            bgChapter1: 'Gemini_Generated_Image_s1kd1rs1kd1rs1kd (7).jpg',
-            bgChapter3: 'Gemini_Generated_Image_s1kd1rs1kd1rs1kd (2).jpg',
-            bgRefracted: 'Gemini_Generated_Image_s1kd1rs1kd1rs1kd (4).jpg'
+            ghostResonance: 'Gemini_Generated_Image_s1kd1rs1kd1rs1kd (6).jpg'
         };
 
-        /* Background URLs mapping per chapter */
+        /* Background URLs mapping per chapter (Normal / Mundo de Cera) */
         const CHAPTER_BACKGROUNDS = {
             1: 'https://adriqc06.github.io/LasLucesdeEleonora/images/escena1.jpg',
             2: 'https://adriqc06.github.io/LasLucesdeEleonora/images/escena2.jpg',
             3: 'https://adriqc06.github.io/LasLucesdeEleonora/images/escena3.jpg',
             4: 'https://adriqc06.github.io/LasLucesdeEleonora/images/escena4.jpg',
             5: 'https://adriqc06.github.io/LasLucesdeEleonora/images/escena5.jpg'
+        };
+
+        /* Background URLs mapping per chapter (Refracted / Plano Espectral) */
+        const CHAPTER_REFRACTED_BACKGROUNDS = {
+            1: 'https://adriqc06.github.io/LasLucesdeEleonora/images/escenaB1.jpg',
+            2: 'https://adriqc06.github.io/LasLucesdeEleonora/images/escenaB2.jpg',
+            3: 'https://adriqc06.github.io/LasLucesdeEleonora/images/escenaB3.jpg',
+            4: 'https://adriqc06.github.io/LasLucesdeEleonora/images/escenaB4.jpg',
+            5: 'https://adriqc06.github.io/LasLucesdeEleonora/images/escenaB5.jpg'
         };
 
         /* Helper function to generate img tag with fallback */
@@ -628,10 +634,12 @@
             const imgEl = document.getElementById('bg-scene-image');
             if (!imgEl) return;
 
+            const ch = gameState.currentChapter;
+
             if (gameState.isRefracted) {
-                imgEl.src = GAME_IMAGES.bgRefracted;
+                imgEl.src = CHAPTER_REFRACTED_BACKGROUNDS[ch] || CHAPTER_REFRACTED_BACKGROUNDS[1];
             } else {
-                imgEl.src = CHAPTER_BACKGROUNDS[gameState.currentChapter] || CHAPTER_BACKGROUNDS[1];
+                imgEl.src = CHAPTER_BACKGROUNDS[ch] || CHAPTER_BACKGROUNDS[1];
             }
         }
 
