@@ -367,14 +367,25 @@
     <!-- GAME SCRIPT LOGIC -->
     <script>
         /* ==========================================================================
-           ATTACHED IMAGES MAPPING & CHAPTER BACKGROUNDS
+           ATTACHED IMAGES MAPPING & ASSETS
            ========================================================================== */
         const GAME_IMAGES = {
             eleonora: 'https://adriqc06.github.io/LasLucesdeEleonora/images/image5.jpg',
-            cadenza: 'Gemini_Generated_Image_s1kd1rs1kd1rs1kd (1).jpg',
-            tuningMan: 'Gemini_Generated_Image_s1kd1rs1kd1rs1kd (5).jpg',
-            desk: 'Gemini_Generated_Image_s1kd1rs1kd1rs1kd.jpg',
-            ghostResonance: 'Gemini_Generated_Image_s1kd1rs1kd1rs1kd (6).jpg'
+            desk: 'https://adriqc06.github.io/LasLucesdeEleonora/images/character1.jpg',
+            hatch: 'https://adriqc06.github.io/LasLucesdeEleonora/images/character2.jpg',
+            cadenza: 'https://adriqc06.github.io/LasLucesdeEleonora/images/character3.jpg',
+            pillar: 'https://adriqc06.github.io/LasLucesdeEleonora/images/character4.jpg',
+            thorns: 'https://adriqc06.github.io/LasLucesdeEleonora/images/character5.jpg',
+            organ: 'https://adriqc06.github.io/LasLucesdeEleonora/images/character6.jpg',
+            waxGuard: 'https://adriqc06.github.io/LasLucesdeEleonora/images/character7.jpg',
+            elevator: 'https://adriqc06.github.io/LasLucesdeEleonora/images/character8.jpg',
+            ghostResonance: 'https://adriqc06.github.io/LasLucesdeEleonora/images/character9.jpg',
+            forge: 'https://adriqc06.github.io/LasLucesdeEleonora/images/character10.jpg',
+            pump: 'https://adriqc06.github.io/LasLucesdeEleonora/images/character11.jpg',
+            tuningMan: 'https://adriqc06.github.io/LasLucesdeEleonora/images/character12.jpg',
+            memory: 'https://adriqc06.github.io/LasLucesdeEleonora/images/character13.jpg',
+            heart: 'https://adriqc06.github.io/LasLucesdeEleonora/images/character14.jpg',
+            acceptance: 'https://adriqc06.github.io/LasLucesdeEleonora/images/character15.jpg'
         };
 
         /* Background URLs mapping per chapter (Normal / Mundo de Cera) */
@@ -403,13 +414,21 @@
         /* Asset visual objects for Hotspots and Dialogue Avatars */
         const ART_ASSETS = {
             eleonora: getImageTag(GAME_IMAGES.eleonora, 'Eleonora Vance', 'w-full h-full object-cover rounded-full border-2 border-amber-500 shadow-md'),
-            cadenza: getImageTag(GAME_IMAGES.cadenza, 'Señor Cadenza'),
-            tuningMan: getImageTag(GAME_IMAGES.tuningMan, 'El Hombre del Diapasón'),
             desk: getImageTag(GAME_IMAGES.desk, 'Escritorio'),
+            hatch: getImageTag(GAME_IMAGES.hatch, 'Escotilla al Bosque'),
+            cadenza: getImageTag(GAME_IMAGES.cadenza, 'Señor Cadenza'),
+            pillar: getImageTag(GAME_IMAGES.pillar, 'Pilar'),
+            thorns: getImageTag(GAME_IMAGES.thorns, 'Espinos Murmurantes'),
+            organ: getImageTag(GAME_IMAGES.organ, 'Órgano de Tonos'),
+            waxGuard: getImageTag(GAME_IMAGES.waxGuard, 'Guardia de Cera'),
+            elevator: getImageTag(GAME_IMAGES.elevator, 'Ascensor Subterráneo'),
             ghostResonance: getImageTag(GAME_IMAGES.ghostResonance, 'Resonancia Espectral'),
-            organ: `<div class="w-full h-full flex flex-col items-center justify-center text-amber-500 bg-stone-900/90 rounded border border-amber-700 p-1"><i class="fa-solid fa-music text-3xl"></i><span class="text-[10px] font-cinzel mt-1">Órgano</span></div>`,
-            pillar: `<div class="w-full h-full flex flex-col items-center justify-center text-cyan-400 bg-stone-900/90 rounded border border-cyan-500 p-1"><i class="fa-solid fa-monument text-3xl"></i><span class="text-[10px] font-cinzel mt-1">Pilar</span></div>`,
-            vessel: `<div class="w-full h-full flex flex-col items-center justify-center text-emerald-400 bg-stone-900/90 rounded border border-emerald-500 p-1"><i class="fa-solid fa-flask text-3xl"></i><span class="text-[10px] font-cinzel mt-1">Vasija</span></div>`
+            forge: getImageTag(GAME_IMAGES.forge, 'Forja de Cristal'),
+            pump: getImageTag(GAME_IMAGES.pump, 'Bomba de Mercurio'),
+            tuningMan: getImageTag(GAME_IMAGES.tuningMan, 'Hombre del Diapasón'),
+            memory: getImageTag(GAME_IMAGES.memory, 'Memoria'),
+            heart: getImageTag(GAME_IMAGES.heart, 'Corazón'),
+            acceptance: getImageTag(GAME_IMAGES.acceptance, 'Aceptación')
         };
 
 
@@ -672,7 +691,7 @@
                 if (isRef) {
                     createHotspot(layer, 'hs-ghost', '40%', '16%', '20%', '35%', ART_ASSETS.ghostResonance, 'Resonancia Espectral', () => handleCh1Ghost(), true);
                 } else {
-                    createHotspot(layer, 'hs-hatch', '42%', '68%', '18%', '26%', `<div class="bg-stone-900/90 border border-amber-600 rounded w-full h-full flex flex-col items-center justify-center"><i class="fa-solid fa-door-closed text-3xl text-amber-500"></i></div>`, 'Escotilla al Bosque', () => handleCh1Hatch());
+                    createHotspot(layer, 'hs-hatch', '42%', '68%', '18%', '26%', ART_ASSETS.hatch, 'Escotilla al Bosque', () => handleCh1Hatch());
                 }
             }
             else if (ch === 2) {
@@ -680,26 +699,26 @@
                 createHotspot(layer, 'hs-p2', '41%', '22%', '18%', '38%', ART_ASSETS.pillar, `Pilar II (${gameState.ch2.pillarsRealigned[1]?'Afinado':'Desafinado'})`, () => handleCh2Pillar(1));
                 createHotspot(layer, 'hs-p3', '70%', '28%', '18%', '38%', ART_ASSETS.pillar, `Pilar III (${gameState.ch2.pillarsRealigned[2]?'Afinado':'Desafinado'})`, () => handleCh2Pillar(2));
 
-                createHotspot(layer, 'hs-path', '38%', '68%', '24%', '24%', `<div class="bg-stone-900/90 border border-emerald-600 rounded w-full h-full flex flex-col items-center justify-center"><i class="fa-solid fa-tree text-3xl text-emerald-500"></i></div>`, gameState.ch2.pathCleared ? 'Paso al Sanatorio' : 'Espinos Murmurantes', () => handleCh2Path());
+                createHotspot(layer, 'hs-path', '38%', '68%', '24%', '24%', ART_ASSETS.thorns, gameState.ch2.pathCleared ? 'Paso al Sanatorio' : 'Espinos Murmurantes', () => handleCh2Path());
             }
             else if (ch === 3) {
                 createHotspot(layer, 'hs-organ', '32%', '20%', '36%', '45%', ART_ASSETS.organ, 'Órgano de Tonos', () => handleCh3Organ());
-                createHotspot(layer, 'hs-guard', '72%', '32%', '20%', '42%', `<div class="bg-stone-900/90 border border-amber-600 rounded w-full h-full flex flex-col items-center justify-center"><i class="fa-solid fa-user-astronaut text-3xl text-amber-600"></i></div>`, gameState.ch3.organSolved ? 'Guardia Inerte' : 'Guardia de Cera', () => handleCh3Guard());
-                createHotspot(layer, 'hs-elevator', '8%', '38%', '20%', '42%', `<div class="bg-stone-900/90 border border-stone-600 rounded w-full h-full flex flex-col items-center justify-center"><i class="fa-solid fa-dungeon text-3xl text-stone-400"></i></div>`, 'Ascensor Subterráneo', () => handleCh3Elevator());
+                createHotspot(layer, 'hs-guard', '72%', '32%', '20%', '42%', ART_ASSETS.waxGuard, gameState.ch3.organSolved ? 'Guardia Inerte' : 'Guardia de Cera', () => handleCh3Guard());
+                createHotspot(layer, 'hs-elevator', '8%', '38%', '20%', '42%', ART_ASSETS.elevator, 'Ascensor Subterráneo', () => handleCh3Elevator());
             }
             else if (ch === 4) {
                 if (isRef) {
                     createHotspot(layer, 'hs-soul1', '12%', '22%', '20%', '35%', ART_ASSETS.ghostResonance, 'Alma Resonante A', () => handleCh4Soul(1), true);
                     createHotspot(layer, 'hs-soul2', '68%', '22%', '20%', '35%', ART_ASSETS.ghostResonance, 'Alma Resonante B', () => handleCh4Soul(2), true);
                 }
-                createHotspot(layer, 'hs-pump', '38%', '32%', '24%', '38%', ART_ASSETS.vessel, gameState.ch4.pumpDisabled ? 'Bomba Desactivada' : 'Bomba de Mercurio', () => handleCh4Pump());
-                createHotspot(layer, 'hs-forge', '40%', '72%', '20%', '22%', `<div class="bg-stone-900/90 border border-amber-500 rounded w-full h-full flex flex-col items-center justify-center"><i class="fa-solid fa-fire-burner text-3xl text-amber-500"></i></div>`, 'Forja de Cristal', () => handleCh4Forge());
+                createHotspot(layer, 'hs-pump', '38%', '32%', '24%', '38%', ART_ASSETS.pump, gameState.ch4.pumpDisabled ? 'Bomba Desactivada' : 'Bomba de Mercurio', () => handleCh4Pump());
+                createHotspot(layer, 'hs-forge', '40%', '72%', '20%', '22%', ART_ASSETS.forge, 'Forja de Cristal', () => handleCh4Forge());
             }
             else if (ch === 5) {
                 createHotspot(layer, 'hs-boss', '36%', '8%', '28%', '52%', ART_ASSETS.tuningMan, 'El Hombre del Diapasón', () => handleCh5Boss());
-                createHotspot(layer, 'hs-f1', '12%', '65%', '22%', '24%', `<div class="bg-stone-900/90 border border-cyan-400 rounded w-full h-full flex flex-col items-center justify-center"><i class="fa-solid fa-brain text-2xl text-cyan-400"></i></div>`, gameState.ch5.frequencies.memory ? 'Memoria (OK)' : 'Frecuencia: Memoria', () => handleCh5Voice('memory'));
-                createHotspot(layer, 'hs-f2', '39%', '65%', '22%', '24%', `<div class="bg-stone-900/90 border border-pink-500 rounded w-full h-full flex flex-col items-center justify-center"><i class="fa-solid fa-heart-pulse text-2xl text-pink-500"></i></div>`, gameState.ch5.frequencies.emotion ? 'Emoción (OK)' : 'Frecuencia: Emoción', () => handleCh5Voice('emotion'));
-                createHotspot(layer, 'hs-f3', '66%', '65%', '22%', '24%', `<div class="bg-stone-900/90 border border-amber-300 rounded w-full h-full flex flex-col items-center justify-center"><i class="fa-solid fa-feather text-2xl text-amber-300"></i></div>`, gameState.ch5.frequencies.acceptance ? 'Aceptación (OK)' : 'Frecuencia: Aceptación', () => handleCh5Voice('acceptance'));
+                createHotspot(layer, 'hs-f1', '12%', '65%', '22%', '24%', ART_ASSETS.memory, gameState.ch5.frequencies.memory ? 'Memoria (OK)' : 'Frecuencia: Memoria', () => handleCh5Voice('memory'));
+                createHotspot(layer, 'hs-f2', '39%', '65%', '22%', '24%', ART_ASSETS.heart, gameState.ch5.frequencies.emotion ? 'Emoción (OK)' : 'Frecuencia: Emoción', () => handleCh5Voice('emotion'));
+                createHotspot(layer, 'hs-f3', '66%', '65%', '22%', '24%', ART_ASSETS.acceptance, gameState.ch5.frequencies.acceptance ? 'Aceptación (OK)' : 'Frecuencia: Aceptación', () => handleCh5Voice('acceptance'));
             }
         }
 
@@ -901,10 +920,10 @@
             if (gameState.ch4.soulsFreed >= 2) {
                 gameState.ch4.pumpDisabled = true;
                 playSfx('solve');
-                updateDialogue('Bomba de Mercurio', 'Bomba desactivada. La forja de cristal está lista.', ART_ASSETS.vessel);
+                updateDialogue('Bomba de Mercurio', 'Bomba desactivada. La forja de cristal está lista.', ART_ASSETS.pump);
                 renderHotspots();
             } else {
-                updateDialogue('Bomba de Mercurio', 'La bomba está protegida por energía de almas. Libéralas en el Plano Refractado.', ART_ASSETS.vessel);
+                updateDialogue('Bomba de Mercurio', 'La bomba está protegida por energía de almas. Libéralas en el Plano Refractado.', ART_ASSETS.pump);
             }
         }
 
